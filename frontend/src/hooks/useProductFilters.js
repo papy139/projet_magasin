@@ -40,8 +40,8 @@ export function useProductFilters(products) {
         ) return false;
       }
       if (filterCategory && p.category !== filterCategory) return false;
-      if (filterStock === 'in' && p.stock === 0) return false;
-      if (filterStock === 'out' && p.stock > 0) return false;
+      if (filterStock === 'in' && Number(p.stock) === 0) return false;
+      if (filterStock === 'out' && Number(p.stock) > 0) return false;
       if (filterMinPrice !== '' && Number(p.price) < Number(filterMinPrice)) return false;
       if (filterMaxPrice !== '' && Number(p.price) > Number(filterMaxPrice)) return false;
       return true;
