@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import { CartProvider } from './context/CartContext';
 import Catalogue from './pages/Catalogue';
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+        <Toaster position="bottom-right" />
         <Navbar />
         <main>
           <Routes>
