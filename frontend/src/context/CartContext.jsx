@@ -1,9 +1,52 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { getProducts } from '../api/products';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  // Sauvegarde automatique dans localStorage
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
+
+  // Vérification stock au mount
+  useEffect(() => {
+    const savedItems = (() => {
+      try {
+        return JSON.parse(localStorage.getItem('cart') || '[]');
+      } catch {
+        return [];
+      }
+    })();
+    if (savedItems.length === 0) return;
+
+    getProducts()
+      .then((products) => {
+        setItems((prev) => {
+          const updated = prev.filter((item) => {
+            const fresh = products.find((p) => p.id === item.product.id);
+            if (!fresh || fresh.stock === 0) {
+              toast.error(`"${item.product.name}" retiré : rupture de stock`);
+              return false;
+            }
+            return true;
+          });
+          return updated;
+        });
+      })
+      .catch(() => {
+        // Fail silently — on garde les items sans vérification
+      });
+  }, []);
 
   const addToCart = (product) => {
     setItems((prevItems) => {
