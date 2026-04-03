@@ -29,7 +29,9 @@ export function useOrderFilters(orders) {
     let result = orders.filter((o) => {
       if (filterStatus !== 'all' && o.status !== filterStatus) return false;
       if (filterDateFrom) {
-        if (new Date(o.created_at) < new Date(filterDateFrom)) return false;
+        const from = new Date(filterDateFrom);
+        from.setHours(0, 0, 0, 0);
+        if (new Date(o.created_at) < from) return false;
       }
       if (filterDateTo) {
         const to = new Date(filterDateTo);
