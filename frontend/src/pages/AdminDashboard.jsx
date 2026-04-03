@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getProducts,
@@ -8,6 +8,8 @@ import {
   deleteProduct,
 } from '../api/products';
 import { getOrders } from '../api/orders';
+import { useProductFilters } from '../hooks/useProductFilters';
+import { useOrderFilters } from '../hooks/useOrderFilters';
 
 const EMPTY_FORM = {
   name: '',
@@ -39,16 +41,39 @@ export default function AdminDashboard() {
   const [stockError, setStockError] = useState('');
   const [stockLoading, setStockLoading] = useState(false);
 
-  // Filtres produits
-  const [filterCategory, setFilterCategory] = useState('');
-  const [filterStock, setFilterStock] = useState('all'); // all | in | out
-  const [filterMinPrice, setFilterMinPrice] = useState('');
-  const [filterMaxPrice, setFilterMaxPrice] = useState('');
-
   // New product form
   const [newForm, setNewForm] = useState(EMPTY_FORM);
   const [newError, setNewError] = useState('');
   const [newLoading, setNewLoading] = useState(false);
+
+  const {
+    search, setSearch,
+    filterCategory, setFilterCategory,
+    filterStock, setFilterStock,
+    filterMinPrice, setFilterMinPrice,
+    filterMaxPrice, setFilterMaxPrice,
+    sortKey: productSortKey,
+    sortDir: productSortDir,
+    toggleSort: toggleProductSort,
+    resetFilters: resetProductFilters,
+    filtered: filteredProducts,
+  } = useProductFilters(products);
+
+  const {
+    filterStatus, setFilterStatus,
+    filterDateFrom, setFilterDateFrom,
+    filterDateTo, setFilterDateTo,
+    sortKey: orderSortKey,
+    sortDir: orderSortDir,
+    toggleSort: toggleOrderSort,
+    resetFilters: resetOrderFilters,
+    filtered: filteredOrders,
+  } = useOrderFilters(orders);
+
+  const categories = useMemo(
+    () => [...new Set(products.map((p) => p.category).filter(Boolean))],
+    [products]
+  );
 
   // Auth guard + chargement initial
   useEffect(() => {
@@ -220,82 +245,97 @@ export default function AdminDashboard() {
 
         {/* ===== SECTION PRODUITS ===== */}
         <section>
-          {(() => {
-            const categories = [...new Set(products.map((p) => p.category).filter(Boolean))];
-            const filtered = products.filter((p) => {
-              if (filterCategory && p.category !== filterCategory) return false;
-              if (filterStock === 'in' && p.stock === 0) return false;
-              if (filterStock === 'out' && p.stock > 0) return false;
-              if (filterMinPrice !== '' && Number(p.price) < Number(filterMinPrice)) return false;
-              if (filterMaxPrice !== '' && Number(p.price) > Number(filterMaxPrice)) return false;
-              return true;
-            });
-            return (
-              <>
-                <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <h2 className="text-xl font-semibold text-gray-700">
-                    Produits ({filtered.length}/{products.length})
-                  </h2>
-                  <select
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="">Toutes catégories</option>
-                    {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                  <select
-                    value={filterStock}
-                    onChange={(e) => setFilterStock(e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="all">Tout le stock</option>
-                    <option value="in">En stock</option>
-                    <option value="out">Rupture</option>
-                  </select>
-                  <input
-                    type="number"
-                    placeholder="Prix min"
-                    value={filterMinPrice}
-                    onChange={(e) => setFilterMinPrice(e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Prix max"
-                    value={filterMaxPrice}
-                    onChange={(e) => setFilterMaxPrice(e.target.value)}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
-                  />
-                  {(filterCategory || filterStock !== 'all' || filterMinPrice || filterMaxPrice) && (
-                    <button
-                      onClick={() => { setFilterCategory(''); setFilterStock('all'); setFilterMinPrice(''); setFilterMaxPrice(''); }}
-                      className="text-xs text-red-500 hover:text-red-700 underline"
-                    >
-                      Réinitialiser
-                    </button>
-                  )}
-                </div>
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <h2 className="text-xl font-semibold text-gray-700">
+              Produits ({filteredProducts.length}/{products.length})
+            </h2>
+            <input
+              type="text"
+              placeholder="Rechercher par nom, catégorie, description..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm flex-1 min-w-48"
+            />
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              <option value="">Toutes catégories</option>
+              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+            <select
+              value={filterStock}
+              onChange={(e) => setFilterStock(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              <option value="all">Tout le stock</option>
+              <option value="in">En stock</option>
+              <option value="out">Rupture</option>
+            </select>
+            <input
+              type="number"
+              placeholder="Prix min"
+              value={filterMinPrice}
+              onChange={(e) => setFilterMinPrice(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
+            />
+            <input
+              type="number"
+              placeholder="Prix max"
+              value={filterMaxPrice}
+              onChange={(e) => setFilterMaxPrice(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
+            />
+            {(search || filterCategory || filterStock !== 'all' || filterMinPrice || filterMaxPrice) && (
+              <button
+                onClick={resetProductFilters}
+                className="text-xs text-red-500 hover:text-red-700 underline"
+              >
+                Réinitialiser
+              </button>
+            )}
+          </div>
 
           {/* Tableau produits */}
           <div className="bg-white rounded-xl shadow overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                  <th className="px-4 py-3 text-left">Nom</th>
-                  <th className="px-4 py-3 text-left">Categorie</th>
-                  <th className="px-4 py-3 text-left">Prix</th>
-                  <th className="px-4 py-3 text-left">Stock</th>
+                  <th
+                    onClick={() => toggleProductSort('name')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Nom {productSortKey === 'name' ? (productSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
+                  <th
+                    onClick={() => toggleProductSort('category')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Catégorie {productSortKey === 'category' ? (productSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
+                  <th
+                    onClick={() => toggleProductSort('price')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Prix {productSortKey === 'price' ? (productSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
+                  <th
+                    onClick={() => toggleProductSort('stock')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Stock {productSortKey === 'stock' ? (productSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
                   <th className="px-4 py-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filtered.length === 0 && (
+                {filteredProducts.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-6 text-center text-gray-400">Aucun produit</td>
                   </tr>
                 )}
-                {filtered.map((product) => (
+                {filteredProducts.map((product) => (
                   <Fragment key={product.id}>
                     <tr className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-800">{product.name}</td>
@@ -523,9 +563,6 @@ export default function AdminDashboard() {
               </button>
             </form>
           </div>
-              </>
-            );
-          })()}
         </section>
 
         {/* ===== SECTION COMMANDES ===== */}
