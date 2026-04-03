@@ -5,13 +5,13 @@ export async function getProducts(search = '', category = '') {
   if (search) params.append('search', search);
   if (category) params.append('category', category);
   const res = await fetch(`${BASE}/api/products?${params}`);
-  if (!res.ok) throw new Error('Erreur chargement produits');
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Erreur chargement produits'); }
   return res.json();
 }
 
 export async function getProductById(id) {
   const res = await fetch(`${BASE}/api/products/${id}`);
-  if (!res.ok) throw new Error('Produit introuvable');
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Produit introuvable'); }
   return res.json();
 }
 
@@ -50,6 +50,7 @@ export async function deleteProduct(id, adminKey) {
     method: 'DELETE',
     headers: { 'x-admin-key': adminKey },
   });
-  if (!res.ok) { const e = await res.json(); throw new Error(e.error); }
-  return res.json();
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || 'Erreur suppression'); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
