@@ -31,7 +31,7 @@ export default function ProductCard({ product, onAddToCart }) {
         {/* Price and Stock Badge */}
         <div className="flex justify-between items-center mb-4">
           <span className="text-xl font-bold text-gray-900">
-            {product.price.toFixed(2)}€
+            {Number(product.price).toFixed(2)}€
           </span>
           <span
             className={`text-xs font-semibold px-2 py-1 rounded ${
