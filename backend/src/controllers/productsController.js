@@ -54,6 +54,9 @@ async function createProduct(req, res, next) {
 async function updateProduct(req, res, next) {
   try {
     const { name, description, price, image_url, category } = req.body;
+    if (!name || price == null) {
+      return res.status(400).json({ error: 'name et price sont requis' });
+    }
     const result = await pool.query(
       'UPDATE products SET name=$1, description=$2, price=$3, image_url=$4, category=$5 WHERE id=$6 RETURNING *',
       [name, description, price, image_url, category, req.params.id]
