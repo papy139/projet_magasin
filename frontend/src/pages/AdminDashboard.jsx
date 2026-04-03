@@ -39,6 +39,12 @@ export default function AdminDashboard() {
   const [stockError, setStockError] = useState('');
   const [stockLoading, setStockLoading] = useState(false);
 
+  // Filtres produits
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterStock, setFilterStock] = useState('all'); // all | in | out
+  const [filterMinPrice, setFilterMinPrice] = useState('');
+  const [filterMaxPrice, setFilterMaxPrice] = useState('');
+
   // New product form
   const [newForm, setNewForm] = useState(EMPTY_FORM);
   const [newError, setNewError] = useState('');
@@ -214,7 +220,62 @@ export default function AdminDashboard() {
 
         {/* ===== SECTION PRODUITS ===== */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Produits ({products.length})</h2>
+          {(() => {
+            const categories = [...new Set(products.map((p) => p.category).filter(Boolean))];
+            const filtered = products.filter((p) => {
+              if (filterCategory && p.category !== filterCategory) return false;
+              if (filterStock === 'in' && p.stock === 0) return false;
+              if (filterStock === 'out' && p.stock > 0) return false;
+              if (filterMinPrice !== '' && Number(p.price) < Number(filterMinPrice)) return false;
+              if (filterMaxPrice !== '' && Number(p.price) > Number(filterMaxPrice)) return false;
+              return true;
+            });
+            return (
+              <>
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <h2 className="text-xl font-semibold text-gray-700">
+                    Produits ({filtered.length}/{products.length})
+                  </h2>
+                  <select
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className="border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="">Toutes catégories</option>
+                    {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <select
+                    value={filterStock}
+                    onChange={(e) => setFilterStock(e.target.value)}
+                    className="border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                    <option value="all">Tout le stock</option>
+                    <option value="in">En stock</option>
+                    <option value="out">Rupture</option>
+                  </select>
+                  <input
+                    type="number"
+                    placeholder="Prix min"
+                    value={filterMinPrice}
+                    onChange={(e) => setFilterMinPrice(e.target.value)}
+                    className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Prix max"
+                    value={filterMaxPrice}
+                    onChange={(e) => setFilterMaxPrice(e.target.value)}
+                    className="border border-gray-300 rounded px-2 py-1 text-sm w-24"
+                  />
+                  {(filterCategory || filterStock !== 'all' || filterMinPrice || filterMaxPrice) && (
+                    <button
+                      onClick={() => { setFilterCategory(''); setFilterStock('all'); setFilterMinPrice(''); setFilterMaxPrice(''); }}
+                      className="text-xs text-red-500 hover:text-red-700 underline"
+                    >
+                      Réinitialiser
+                    </button>
+                  )}
+                </div>
 
           {/* Tableau produits */}
           <div className="bg-white rounded-xl shadow overflow-x-auto">
@@ -229,12 +290,12 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {products.length === 0 && (
+                {filtered.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-6 text-center text-gray-400">Aucun produit</td>
                   </tr>
                 )}
-                {products.map((product) => (
+                {filtered.map((product) => (
                   <Fragment key={product.id}>
                     <tr className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium text-gray-800">{product.name}</td>
@@ -462,6 +523,9 @@ export default function AdminDashboard() {
               </button>
             </form>
           </div>
+              </>
+            );
+          })()}
         </section>
 
         {/* ===== SECTION COMMANDES ===== */}
