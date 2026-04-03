@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
@@ -12,11 +12,11 @@ export default function Commande() {
   const [error, setError] = useState('');
   const [orderConfirmed, setOrderConfirmed] = useState(null);
 
-  // Redirect si panier vide
-  if (!loading && items.length === 0 && !orderConfirmed) {
-    navigate('/panier');
-    return null;
-  }
+  useEffect(() => {
+    if (items.length === 0 && !orderConfirmed) {
+      navigate('/panier');
+    }
+  }, [items, orderConfirmed, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

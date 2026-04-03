@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   const [newError, setNewError] = useState('');
   const [newLoading, setNewLoading] = useState(false);
 
-  // Auth guard
+  // Auth guard + chargement initial
   useEffect(() => {
     const key = sessionStorage.getItem('adminKey');
     if (!key) {
@@ -52,31 +52,15 @@ export default function AdminDashboard() {
       return;
     }
     setAdminKey(key);
-  }, [navigate]);
-
-  // Load data
-  const loadData = async (key) => {
     setError('');
-    try {
-      const [prods, ords] = await Promise.all([
-        getProducts(),
-        getOrders(key),
-      ]);
-      setProducts(prods);
-      setOrders(ords);
-    } catch (e) {
-      setError(e.message || 'Erreur lors du chargement des données');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const key = sessionStorage.getItem('adminKey');
-    if (key) {
-      loadData(key);
-    }
-  }, []);
+    Promise.all([getProducts(), getOrders(key)])
+      .then(([prods, ords]) => {
+        setProducts(prods);
+        setOrders(ords);
+      })
+      .catch((e) => setError(e.message || 'Erreur lors du chargement des données'))
+      .finally(() => setLoading(false));
+  }, [navigate]);
 
   const reloadProducts = async () => {
     try {
@@ -216,7 +200,7 @@ export default function AdminDashboard() {
             onClick={handleLogout}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
-            Deconnexion
+            Déconnexion
           </button>
         </div>
       </div>

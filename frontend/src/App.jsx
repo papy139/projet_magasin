@@ -13,7 +13,7 @@ export default function App() {
     <CartProvider>
       <BrowserRouter>
         <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">
+        <main>
           <Routes>
             <Route path="/" element={<Catalogue />} />
             <Route path="/panier" element={<Panier />} />
