@@ -10,9 +10,13 @@ Application e-commerce fullstack avec React, Node.js/Express et PostgreSQL, orch
 ## Lancement
 
 ```bash
+git clone https://github.com/papy139/projet_magasin.git
+cd projet_magasin
 cp .env.example .env
 docker compose up --build
 ```
+
+Le fichier `.env.example` contient des valeurs par défaut fonctionnelles — pas besoin de l'éditer pour un premier lancement.
 
 Les 3 services démarrent automatiquement :
 - **Base de données** PostgreSQL (avec données initiales)
@@ -29,9 +33,7 @@ Les 3 services démarrent automatiquement :
 
 ## Clé admin par défaut
 
-La clé admin définie dans `.env.example` est `your_admin_key`.
-
-Dans le `.env` fourni pour les tests : `admin-secret-key`
+La clé admin définie dans `.env.example` est `admin-secret-key`.
 
 Accès au dashboard admin : http://localhost:5173/admin
 
