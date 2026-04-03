@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
+import toast from 'react-hot-toast';
 
 export default function Commande() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function Commande() {
       });
       localStorage.setItem('order_history', JSON.stringify(history));
       setOrderConfirmed(response);
+      toast.success(`Commande #${response.id} confirmée !`);
     } catch (err) {
       setError(err.message || 'Erreur lors de la création de la commande');
     } finally {
