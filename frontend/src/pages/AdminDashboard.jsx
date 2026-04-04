@@ -7,7 +7,7 @@ import {
   updateStock,
   deleteProduct,
 } from "../api/products";
-import { getOrders } from "../api/orders";
+import { getOrders, updateOrderStatus } from "../api/orders";
 import { useProductFilters } from "../hooks/useProductFilters";
 import { useOrderFilters } from "../hooks/useOrderFilters";
 import { usePageTitle } from "../hooks/usePageTitle";
@@ -203,6 +203,18 @@ export default function AdminDashboard() {
       await reloadProducts();
     } catch (e) {
       setError(e.message || "Erreur lors de la suppression");
+    }
+  };
+
+  // Update order status
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const updated = await updateOrderStatus(orderId, newStatus, adminKey);
+      setOrders((prev) =>
+        prev.map((o) => (o.id === updated.id ? { ...o, status: updated.status } : o))
+      );
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -779,13 +791,14 @@ export default function AdminDashboard() {
                         : "↓"
                       : ""}
                   </th>
+                  <th className="px-4 py-3 text-left">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredOrders.length === 0 && (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="px-4 py-6 text-center text-gray-400"
                     >
                       Aucune commande
@@ -822,6 +835,17 @@ export default function AdminDashboard() {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-1 text-xs"
+                      >
+                        <option value="pending">pending</option>
+                        <option value="confirmed">confirmed</option>
+                        <option value="cancelled">cancelled</option>
+                      </select>
                     </td>
                   </tr>
                 ))}
