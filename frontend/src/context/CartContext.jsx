@@ -20,14 +20,7 @@ export function CartProvider({ children }) {
 
   // Vérification stock au mount
   useEffect(() => {
-    const savedItems = (() => {
-      try {
-        return JSON.parse(localStorage.getItem("cart") || "[]");
-      } catch {
-        return [];
-      }
-    })();
-    if (savedItems.length === 0) return;
+    if (items.length === 0) return;
 
     getProducts()
       .then((products) => {
