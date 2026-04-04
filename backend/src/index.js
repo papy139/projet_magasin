@@ -18,6 +18,4 @@ app.use('/api/orders', require('./routes/orders'));
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+app.listen(PORT, () => {});
