@@ -97,6 +97,9 @@ async function deleteProduct(req, res, next) {
     }
     res.json({ message: 'Produit supprimé' });
   } catch (err) {
+    if (err.code === '23503') {
+      return res.status(409).json({ error: 'Impossible de supprimer : ce produit est lié à des commandes existantes' });
+    }
     next(err);
   }
 }
