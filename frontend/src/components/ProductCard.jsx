@@ -15,7 +15,10 @@ export default function ProductCard({ product, onAddToCart, stars = 0, isFeature
           <div className="w-full h-full bg-gray-300" />
         )}
         {isFeatured && (
-          <span className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow">
+          <span
+            aria-label="Produit mis en avant"
+            className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow"
+          >
             🏆 Produit phare
           </span>
         )}
@@ -27,12 +30,12 @@ export default function ProductCard({ product, onAddToCart, stars = 0, isFeature
         <h3 className="text-lg font-semibold text-gray-800 mb-2">
           {product.name}
         </h3>
-        {stars > 0 && (
+        {stars >= 1 && (
           <div className="flex items-center gap-0.5 mb-2">
             {Array.from({ length: 3 }).map((_, i) => (
               <span
                 key={i}
-                className={i < stars ? "text-yellow-400" : "text-gray-200"}
+                className={i < stars ? "text-yellow-400" : "text-gray-300"}
               >
                 ★
               </span>
