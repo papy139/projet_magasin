@@ -3,18 +3,23 @@ const pool = require('../db/pool');
 async function getAllProducts(req, res, next) {
   try {
     const { search, category } = req.query;
-    let query = 'SELECT * FROM products WHERE 1=1';
+    let query = `
+      SELECT p.*, COALESCE(SUM(oi.quantity), 0)::int AS total_sold
+      FROM products p
+      LEFT JOIN order_items oi ON oi.product_id = p.id
+      WHERE 1=1
+    `;
     const params = [];
 
     if (search) {
       params.push(`%${search}%`);
-      query += ` AND name ILIKE $${params.length}`;
+      query += ` AND p.name ILIKE $${params.length}`;
     }
     if (category) {
       params.push(category);
-      query += ` AND category = $${params.length}`;
+      query += ` AND p.category = $${params.length}`;
     }
-    query += ' ORDER BY created_at DESC';
+    query += ` GROUP BY p.id ORDER BY p.created_at DESC`;
 
     const result = await pool.query(query, params);
     res.json(result.rows);
