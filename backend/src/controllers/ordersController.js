@@ -11,9 +11,13 @@ async function createOrder(req, res, next) {
   try {
     await client.query('BEGIN');
 
-    // Vérifier le stock de chaque produit
+    // Vérifier le stock et verrouiller les lignes (SELECT FOR UPDATE évite le TOCTOU)
+    const productData = {};
     for (const item of items) {
-      const result = await client.query('SELECT name, stock FROM products WHERE id=$1', [item.product_id]);
+      const result = await client.query(
+        'SELECT name, stock, price FROM products WHERE id=$1 FOR UPDATE',
+        [item.product_id]
+      );
       if (result.rows.length === 0) {
         await client.query('ROLLBACK');
         return res.status(400).json({ error: `Produit id=${item.product_id} introuvable` });
@@ -23,6 +27,7 @@ async function createOrder(req, res, next) {
         await client.query('ROLLBACK');
         return res.status(400).json({ error: `Stock insuffisant pour ${product.name}` });
       }
+      productData[item.product_id] = product;
     }
 
     // Créer la commande
@@ -34,8 +39,7 @@ async function createOrder(req, res, next) {
 
     // Créer les lignes et décrémenter le stock
     for (const item of items) {
-      const productResult = await client.query('SELECT price FROM products WHERE id=$1', [item.product_id]);
-      const unit_price = productResult.rows[0].price;
+      const { price: unit_price } = productData[item.product_id];
 
       await client.query(
         'INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ($1, $2, $3, $4)',
