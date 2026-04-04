@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { getProducts } from "../api/products";
 import { useCart } from "../context/CartContext";
@@ -15,6 +15,7 @@ export default function Catalogue() {
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [sortBy, setSortBy] = useState("newest");
   const sentinelRef = useRef(null);
   const { addToCart } = useCart();
 
@@ -30,22 +31,32 @@ export default function Catalogue() {
   // Reset visibleCount quand les filtres changent
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [search, category]);
+  }, [search, category, sortBy]);
 
   const categories = [
     "Toutes",
     ...new Set(products.map((p) => p.category).filter(Boolean)),
   ];
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      search === "" ||
-      product.name.toLowerCase().includes(search.toLowerCase()) ||
-      (product.description || "").toLowerCase().includes(search.toLowerCase());
-    const matchesCategory =
-      category === "" || category === "Toutes" || product.category === category;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredProducts = useMemo(() => {
+    const filtered = products.filter((product) => {
+      const matchesSearch =
+        search === "" ||
+        product.name.toLowerCase().includes(search.toLowerCase()) ||
+        (product.description || "").toLowerCase().includes(search.toLowerCase());
+      const matchesCategory =
+        category === "" || category === "Toutes" || product.category === category;
+      return matchesSearch && matchesCategory;
+    });
+
+    const sorted = [...filtered];
+    if (sortBy === "price_asc") sorted.sort((a, b) => Number(a.price) - Number(b.price));
+    else if (sortBy === "price_desc") sorted.sort((a, b) => Number(b.price) - Number(a.price));
+    else if (sortBy === "stock_desc") sorted.sort((a, b) => Number(b.stock) - Number(a.stock));
+    else if (sortBy === "popular") sorted.sort((a, b) => Number(b.total_sold) - Number(a.total_sold));
+
+    return sorted;
+  }, [products, search, category, sortBy]);
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
@@ -72,6 +83,21 @@ export default function Catalogue() {
     toast.success(`"${product.name}" ajouté au panier`);
   };
 
+  const maxSold = Math.max(...filteredProducts.map((p) => Number(p.total_sold)), 0);
+  const top3Ids = [...filteredProducts]
+    .filter((p) => Number(p.total_sold) > 0)
+    .sort((a, b) => Number(b.total_sold) - Number(a.total_sold))
+    .slice(0, 3)
+    .map((p) => p.id);
+
+  const getStars = (product) => {
+    if (maxSold === 0 || Number(product.total_sold) === 0) return 0;
+    const ratio = Number(product.total_sold) / maxSold;
+    if (ratio >= 0.66) return 3;
+    if (ratio >= 0.33) return 2;
+    return 1;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
@@ -93,7 +119,7 @@ export default function Catalogue() {
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Catalogue</h1>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Rechercher
@@ -106,6 +132,7 @@ export default function Catalogue() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Catégorie
@@ -120,6 +147,23 @@ export default function Catalogue() {
                     {cat}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Trier par
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="newest">Nouveautés</option>
+                <option value="price_asc">Prix croissant</option>
+                <option value="price_desc">Prix décroissant</option>
+                <option value="stock_desc">Stock disponible</option>
+                <option value="popular">Les plus achetés</option>
               </select>
             </div>
           </div>
@@ -137,6 +181,8 @@ export default function Catalogue() {
                   key={product.id}
                   product={product}
                   onAddToCart={handleAddToCart}
+                  stars={getStars(product)}
+                  isFeatured={top3Ids.includes(product.id)}
                 />
               ))}
             </div>
