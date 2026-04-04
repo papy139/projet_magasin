@@ -83,21 +83,6 @@ export default function Catalogue() {
     toast.success(`"${product.name}" ajouté au panier`);
   };
 
-  const maxSold = Math.max(...filteredProducts.map((p) => Number(p.total_sold)), 0);
-  const top3Ids = [...filteredProducts]
-    .filter((p) => Number(p.total_sold) > 0)
-    .sort((a, b) => Number(b.total_sold) - Number(a.total_sold))
-    .slice(0, 3)
-    .map((p) => p.id);
-
-  const getStars = (product) => {
-    if (maxSold === 0 || Number(product.total_sold) === 0) return 0;
-    const ratio = Number(product.total_sold) / maxSold;
-    if (ratio >= 0.66) return 3;
-    if (ratio >= 0.33) return 2;
-    return 1;
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
@@ -181,8 +166,9 @@ export default function Catalogue() {
                   key={product.id}
                   product={product}
                   onAddToCart={handleAddToCart}
-                  stars={getStars(product)}
-                  isFeatured={top3Ids.includes(product.id)}
+                  rating={Number(product.rating)}
+                  ratingCount={product.rating_count}
+                  isFeatured={product.is_featured}
                 />
               ))}
             </div>
