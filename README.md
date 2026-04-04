@@ -18,6 +18,12 @@ docker compose up --build
 
 Le fichier `.env.example` contient des valeurs par défaut fonctionnelles — pas besoin de l'éditer pour un premier lancement.
 
+> **Si vous avez déjà lancé le projet auparavant**, le schéma de base de données a évolué. Supprimez le volume existant avant de relancer :
+> ```bash
+> docker compose down -v
+> docker compose up --build
+> ```
+
 Les 3 services démarrent automatiquement :
 - **Base de données** PostgreSQL (avec données initiales)
 - **Backend** Express (attend que la DB soit prête)
@@ -40,15 +46,16 @@ Accès au dashboard admin : http://localhost:5173/admin
 ## Fonctionnalités
 
 **Côté public**
-- Catalogue produits avec recherche et filtre par catégorie
-- Panier (Context API, persistant dans la session)
+- Catalogue produits avec recherche, filtre par catégorie et tri (prix, stock, popularité)
+- Notation par étoiles et badge "Produit phare" sur les bestsellers
+- Panier (Context API, limité au stock disponible)
 - Passage de commande (nom + email)
-- Historique des commandes (stocké en localStorage)
+- Historique des commandes par email (lookup serveur)
 
 **Côté admin** (clé requise)
 - Ajout / modification / suppression de produits
 - Gestion des stocks
-- Visualisation de toutes les commandes
+- Visualisation et mise à jour du statut de toutes les commandes (pending / confirmed / cancelled)
 
 ## Stack technique
 
