@@ -14,9 +14,10 @@ export default function Panier() {
     }).format(price);
   };
 
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleQuantityChange = (productId, newQuantity, stock) => {
     const quantity = parseInt(newQuantity, 10);
     if (!isNaN(quantity) && quantity > 0) {
+      if (quantity > stock) return;
       updateQuantity(productId, quantity);
     }
   };
@@ -94,9 +95,10 @@ export default function Panier() {
                         id={`qty-${item.product.id}`}
                         type="number"
                         min="1"
+                        max={item.product.stock}
                         value={item.quantity}
                         onChange={(e) =>
-                          handleQuantityChange(item.product.id, e.target.value)
+                          handleQuantityChange(item.product.id, e.target.value, item.product.stock)
                         }
                         className="w-16 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />

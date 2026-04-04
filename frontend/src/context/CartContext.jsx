@@ -47,6 +47,7 @@ export function CartProvider({ children }) {
         (item) => item.product.id === product.id,
       );
       if (existingItem) {
+        if (existingItem.quantity >= product.stock) return prevItems;
         return prevItems.map((item) =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
