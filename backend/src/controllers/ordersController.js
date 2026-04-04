@@ -81,4 +81,50 @@ async function getAllOrders(req, res, next) {
   }
 }
 
-module.exports = { createOrder, getAllOrders };
+async function getOrdersByEmail(req, res, next) {
+  const { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ error: 'Le paramètre email est requis' });
+  }
+  try {
+    const result = await pool.query(
+      `SELECT o.*, json_agg(json_build_object(
+        'product_id', oi.product_id,
+        'quantity', oi.quantity,
+        'unit_price', oi.unit_price
+      )) AS items
+      FROM orders o
+      LEFT JOIN order_items oi ON oi.order_id = o.id
+      WHERE o.customer_email = $1
+      GROUP BY o.id
+      ORDER BY o.created_at DESC`,
+      [email]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function updateOrderStatus(req, res, next) {
+  const { id } = req.params;
+  const { status } = req.body;
+  const allowed = ['pending', 'confirmed', 'cancelled'];
+  if (!status || !allowed.includes(status)) {
+    return res.status(400).json({ error: `Statut invalide. Valeurs acceptées : ${allowed.join(', ')}` });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE orders SET status=$1 WHERE id=$2 RETURNING *',
+      [status, id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Commande introuvable' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { createOrder, getAllOrders, getOrdersByEmail, updateOrderStatus };

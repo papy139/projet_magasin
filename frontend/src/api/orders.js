@@ -23,3 +23,28 @@ export async function getOrders(adminKey) {
   }
   return res.json();
 }
+
+export async function getOrdersByEmail(email) {
+  const res = await fetch(`${BASE}/api/orders/by-email?email=${encodeURIComponent(email)}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || 'Erreur lors de la récupération des commandes');
+  }
+  return res.json();
+}
+
+export async function updateOrderStatus(orderId, status, adminKey) {
+  const res = await fetch(`${BASE}/api/orders/${orderId}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-key': adminKey,
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || 'Erreur lors de la mise à jour du statut');
+  }
+  return res.json();
+}
