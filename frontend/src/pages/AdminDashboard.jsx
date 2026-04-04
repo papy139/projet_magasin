@@ -567,25 +567,73 @@ export default function AdminDashboard() {
 
         {/* ===== SECTION COMMANDES ===== */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Commandes ({orders.length})</h2>
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <h2 className="text-xl font-semibold text-gray-700">
+              Commandes ({filteredOrders.length}/{orders.length})
+            </h2>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              <option value="all">Tous statuts</option>
+              <option value="pending">pending</option>
+              <option value="confirmed">confirmed</option>
+            </select>
+            <input
+              type="date"
+              value={filterDateFrom}
+              onChange={(e) => setFilterDateFrom(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            />
+            <input
+              type="date"
+              value={filterDateTo}
+              onChange={(e) => setFilterDateTo(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            />
+            {(filterStatus !== 'all' || filterDateFrom || filterDateTo) && (
+              <button
+                onClick={resetOrderFilters}
+                className="text-xs text-red-500 hover:text-red-700 underline"
+              >
+                Réinitialiser
+              </button>
+            )}
+          </div>
           <div className="bg-white rounded-xl shadow overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
                 <tr>
-                  <th className="px-4 py-3 text-left">ID</th>
+                  <th
+                    onClick={() => toggleOrderSort('id')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    ID {orderSortKey === 'id' ? (orderSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
                   <th className="px-4 py-3 text-left">Client</th>
                   <th className="px-4 py-3 text-left">Email</th>
-                  <th className="px-4 py-3 text-left">Statut</th>
-                  <th className="px-4 py-3 text-left">Date</th>
+                  <th
+                    onClick={() => toggleOrderSort('status')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Statut {orderSortKey === 'status' ? (orderSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
+                  <th
+                    onClick={() => toggleOrderSort('created_at')}
+                    className="px-4 py-3 text-left cursor-pointer select-none hover:bg-gray-200"
+                  >
+                    Date {orderSortKey === 'created_at' ? (orderSortDir === 'asc' ? '↑' : '↓') : ''}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {orders.length === 0 && (
+                {filteredOrders.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-6 text-center text-gray-400">Aucune commande</td>
                   </tr>
                 )}
-                {orders.map((order) => (
+                {filteredOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-gray-500">#{order.id}</td>
                     <td className="px-4 py-3 font-medium text-gray-800">{order.customer_name}</td>
