@@ -1,7 +1,9 @@
 import { useCart } from '../context/CartContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 export default function Panier() {
+  usePageTitle('Panier');
   const { items, total, removeFromCart, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
 

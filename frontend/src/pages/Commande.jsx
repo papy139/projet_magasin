@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { createOrder } from '../api/orders';
 import toast from 'react-hot-toast';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 export default function Commande() {
+  usePageTitle('Commande');
   const navigate = useNavigate();
   const { items, total, clearCart } = useCart();
   const [customer_name, setCustomerName] = useState('');

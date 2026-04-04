@@ -10,6 +10,7 @@ import {
 import { getOrders } from '../api/orders';
 import { useProductFilters } from '../hooks/useProductFilters';
 import { useOrderFilters } from '../hooks/useOrderFilters';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const EMPTY_FORM = {
   name: '',
@@ -21,6 +22,7 @@ const EMPTY_FORM = {
 };
 
 export default function AdminDashboard() {
+  usePageTitle('Dashboard Admin');
   const navigate = useNavigate();
   const [adminKey, setAdminKey] = useState('');
 

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getOrders } from '../api/orders';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 export default function AdminLogin() {
+  usePageTitle('Admin');
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
