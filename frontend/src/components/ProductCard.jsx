@@ -1,5 +1,6 @@
-export default function ProductCard({ product, onAddToCart, stars = 0, isFeatured = false }) {
+export default function ProductCard({ product, onAddToCart, rating = 0, ratingCount = 0, isFeatured = false }) {
   const isOutOfStock = product.stock === 0;
+  const filledStars = Math.round(rating);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -17,7 +18,7 @@ export default function ProductCard({ product, onAddToCart, stars = 0, isFeature
         {isFeatured && (
           <span
             aria-label="Produit mis en avant"
-            className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow"
+            className="absolute top-0 left-0 w-full bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 text-center shadow"
           >
             🏆 Produit phare
           </span>
@@ -27,19 +28,26 @@ export default function ProductCard({ product, onAddToCart, stars = 0, isFeature
       {/* Content */}
       <div className="p-4 flex flex-col">
         {/* Name */}
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+        <h3 className="text-lg font-semibold text-gray-800 mb-1">
           {product.name}
         </h3>
-        {stars >= 1 && (
-          <div className="flex items-center gap-0.5 mb-2">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <span
-                key={i}
-                className={i < stars ? "text-yellow-400" : "text-gray-300"}
-              >
-                ★
-              </span>
-            ))}
+
+        {/* Rating */}
+        {rating > 0 && (
+          <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={i < filledStars ? "text-yellow-400" : "text-gray-300"}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <span className="text-sm text-gray-500">
+              {rating.toFixed(1)} ({ratingCount} avis)
+            </span>
           </div>
         )}
 
