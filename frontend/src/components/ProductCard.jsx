@@ -1,10 +1,10 @@
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({ product, onAddToCart, stars = 0, isFeatured = false }) {
   const isOutOfStock = product.stock === 0;
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       {/* Image */}
-      <div className="h-48 bg-gray-300 overflow-hidden">
+      <div className="h-48 bg-gray-300 overflow-hidden relative">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -14,6 +14,11 @@ export default function ProductCard({ product, onAddToCart }) {
         ) : (
           <div className="w-full h-full bg-gray-300" />
         )}
+        {isFeatured && (
+          <span className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full shadow">
+            🏆 Produit phare
+          </span>
+        )}
       </div>
 
       {/* Content */}
@@ -22,6 +27,18 @@ export default function ProductCard({ product, onAddToCart }) {
         <h3 className="text-lg font-semibold text-gray-800 mb-2">
           {product.name}
         </h3>
+        {stars > 0 && (
+          <div className="flex items-center gap-0.5 mb-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <span
+                key={i}
+                className={i < stars ? "text-yellow-400" : "text-gray-200"}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Description */}
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
