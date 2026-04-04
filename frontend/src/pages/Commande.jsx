@@ -33,7 +33,6 @@ export default function Commande() {
         items: items.map((i) => ({
           product_id: i.product.id,
           quantity: i.quantity,
-          unit_price: i.product.price,
         })),
       };
 
