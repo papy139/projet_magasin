@@ -3,10 +3,13 @@ import toast from 'react-hot-toast';
 import { getProducts } from '../api/products';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
+import { usePageTitle } from '../hooks/usePageTitle';
+import SkeletonCard from '../components/SkeletonCard';
 
 const PAGE_SIZE = 12;
 
 export default function Catalogue() {
+  usePageTitle('Catalogue');
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
@@ -67,8 +70,15 @@ export default function Catalogue() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600 text-lg">Chargement...</p>
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">Catalogue</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
