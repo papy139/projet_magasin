@@ -730,6 +730,7 @@ export default function AdminDashboard() {
               <option value="all">Tous statuts</option>
               <option value="pending">pending</option>
               <option value="confirmed">confirmed</option>
+              <option value="cancelled">cancelled</option>
             </select>
             <input
               type="date"
