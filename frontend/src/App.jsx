@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import Navbar from './components/Navbar';
-import { CartProvider } from './context/CartContext';
-import Catalogue from './pages/Catalogue';
-import Panier from './pages/Panier';
-import Commande from './pages/Commande';
-import Historique from './pages/Historique';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
-import NotFound from './pages/NotFound';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
+import { CartProvider } from "./context/CartContext";
+import Catalogue from "./pages/Catalogue";
+import Panier from "./pages/Panier";
+import Commande from "./pages/Commande";
+import Historique from "./pages/Historique";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (

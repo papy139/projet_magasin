@@ -1,16 +1,16 @@
-import { useCart } from '../context/CartContext';
-import { useNavigate, Link } from 'react-router-dom';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { useCart } from "../context/CartContext";
+import { useNavigate, Link } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Panier() {
-  usePageTitle('Panier');
+  usePageTitle("Panier");
   const { items, total, removeFromCart, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
+    return new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "EUR",
     }).format(price);
   };
 
@@ -26,7 +26,9 @@ export default function Panier() {
       <div className="min-h-screen bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Votre panier est vide</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Votre panier est vide
+            </h1>
             <p className="text-gray-600 mb-8">
               Explorez notre catalogue pour ajouter des produits à votre panier.
             </p>
@@ -82,7 +84,10 @@ export default function Panier() {
 
                     {/* Quantité */}
                     <div className="flex items-center gap-4 mb-4">
-                      <label htmlFor={`qty-${item.product.id}`} className="text-sm text-gray-600">
+                      <label
+                        htmlFor={`qty-${item.product.id}`}
+                        className="text-sm text-gray-600"
+                      >
                         Quantité :
                       </label>
                       <input
@@ -100,7 +105,8 @@ export default function Panier() {
                     {/* Sous-total et bouton supprimer */}
                     <div className="flex items-center justify-between">
                       <p className="text-lg font-semibold text-gray-900">
-                        Sous-total : {formatPrice(item.product.price * item.quantity)}
+                        Sous-total :{" "}
+                        {formatPrice(item.product.price * item.quantity)}
                       </p>
                       <button
                         onClick={() => removeFromCart(item.product.id)}
@@ -124,14 +130,16 @@ export default function Panier() {
               <div className="border-t border-gray-200 pt-6 mb-6">
                 <div className="flex justify-between items-center">
                   <p className="text-lg font-semibold text-gray-900">Total :</p>
-                  <p className="text-2xl font-bold text-blue-600">{formatPrice(total)}</p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {formatPrice(total)}
+                  </p>
                 </div>
               </div>
 
               {/* Boutons d'action */}
               <div className="space-y-3">
                 <button
-                  onClick={() => navigate('/commande')}
+                  onClick={() => navigate("/commande")}
                   className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
                 >
                   Passer la commande

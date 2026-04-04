@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { createOrder } from '../api/orders';
-import toast from 'react-hot-toast';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { createOrder } from "../api/orders";
+import toast from "react-hot-toast";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function Commande() {
-  usePageTitle('Commande');
+  usePageTitle("Commande");
   const navigate = useNavigate();
   const { items, total, clearCart } = useCart();
-  const [customer_name, setCustomerName] = useState('');
-  const [customer_email, setCustomerEmail] = useState('');
+  const [customer_name, setCustomerName] = useState("");
+  const [customer_email, setCustomerEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [orderConfirmed, setOrderConfirmed] = useState(null);
 
   useEffect(() => {
     if (items.length === 0 && !orderConfirmed) {
-      navigate('/panier');
+      navigate("/panier");
     }
   }, [items, orderConfirmed, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -39,19 +39,19 @@ export default function Commande() {
       const response = await createOrder(orderData);
       clearCart();
       // Sauvegarde dans localStorage pour la page Historique
-      const history = JSON.parse(localStorage.getItem('order_history') || '[]');
+      const history = JSON.parse(localStorage.getItem("order_history") || "[]");
       history.push({
         id: response.id,
         date: new Date().toISOString(),
-        status: response.status || 'pending',
+        status: response.status || "pending",
         customer_name,
         customer_email,
       });
-      localStorage.setItem('order_history', JSON.stringify(history));
+      localStorage.setItem("order_history", JSON.stringify(history));
       setOrderConfirmed(response);
       toast.success(`Commande #${response.id} confirmée !`);
     } catch (err) {
-      setError(err.message || 'Erreur lors de la création de la commande');
+      setError(err.message || "Erreur lors de la création de la commande");
     } finally {
       setLoading(false);
     }
@@ -81,8 +81,11 @@ export default function Commande() {
               Commande confirmée !
             </h2>
             <p className="text-gray-600 mb-4">
-              Merci pour votre achat,{' '}
-              <span className="font-semibold">{orderConfirmed.customer_name}</span>.
+              Merci pour votre achat,{" "}
+              <span className="font-semibold">
+                {orderConfirmed.customer_name}
+              </span>
+              .
             </p>
             <div className="bg-gray-100 rounded-lg p-4 mb-6">
               <p className="text-sm text-gray-600 mb-1">Numéro de commande</p>
@@ -91,11 +94,14 @@ export default function Commande() {
               </p>
             </div>
             <p className="text-sm text-gray-600 mb-6">
-              Commande passée par{' '}
-              <span className="font-semibold">{orderConfirmed.customer_email}</span>.
+              Commande passée par{" "}
+              <span className="font-semibold">
+                {orderConfirmed.customer_email}
+              </span>
+              .
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition"
             >
               Retour à l'accueil
@@ -109,7 +115,9 @@ export default function Commande() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Passage de commande</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          Passage de commande
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
@@ -122,7 +130,10 @@ export default function Commande() {
                 )}
 
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Nom complet
                   </label>
                   <input
@@ -137,7 +148,10 @@ export default function Commande() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Email
                   </label>
                   <input
@@ -156,7 +170,7 @@ export default function Commande() {
                   disabled={loading}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition"
                 >
-                  {loading ? 'Traitement...' : 'Confirmer la commande'}
+                  {loading ? "Traitement..." : "Confirmer la commande"}
                 </button>
               </form>
             </div>
@@ -168,9 +182,14 @@ export default function Commande() {
 
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
                 {items.map((item) => (
-                  <div key={item.product.id} className="flex justify-between text-sm">
+                  <div
+                    key={item.product.id}
+                    className="flex justify-between text-sm"
+                  >
                     <div>
-                      <p className="font-medium text-gray-900">{item.product.name}</p>
+                      <p className="font-medium text-gray-900">
+                        {item.product.name}
+                      </p>
                       <p className="text-gray-600">Quantité: {item.quantity}</p>
                     </div>
                     <p className="font-semibold text-gray-900">
@@ -182,7 +201,9 @@ export default function Commande() {
 
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold text-gray-900">Total</span>
-                <span className="text-lg font-bold text-indigo-600">{total.toFixed(2)}€</span>
+                <span className="text-lg font-bold text-indigo-600">
+                  {total.toFixed(2)}€
+                </span>
               </div>
             </div>
           </div>

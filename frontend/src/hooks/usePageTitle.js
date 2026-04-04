@@ -1,5 +1,5 @@
 // frontend/src/hooks/usePageTitle.js
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 export function usePageTitle(title) {
   useEffect(() => {

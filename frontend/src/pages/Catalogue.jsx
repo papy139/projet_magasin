@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import toast from 'react-hot-toast';
-import { getProducts } from '../api/products';
-import { useCart } from '../context/CartContext';
-import ProductCard from '../components/ProductCard';
-import { usePageTitle } from '../hooks/usePageTitle';
-import SkeletonCard from '../components/SkeletonCard';
+import { useState, useEffect, useRef, useCallback } from "react";
+import toast from "react-hot-toast";
+import { getProducts } from "../api/products";
+import { useCart } from "../context/CartContext";
+import ProductCard from "../components/ProductCard";
+import { usePageTitle } from "../hooks/usePageTitle";
+import SkeletonCard from "../components/SkeletonCard";
 
 const PAGE_SIZE = 12;
 
 export default function Catalogue() {
-  usePageTitle('Catalogue');
+  usePageTitle("Catalogue");
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('');
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef(null);
@@ -21,7 +21,9 @@ export default function Catalogue() {
   useEffect(() => {
     getProducts()
       .then((data) => setProducts(data))
-      .catch((err) => toast.error(err.message || 'Impossible de charger les produits'))
+      .catch((err) =>
+        toast.error(err.message || "Impossible de charger les produits"),
+      )
       .finally(() => setLoading(false));
   }, []);
 
@@ -31,17 +33,17 @@ export default function Catalogue() {
   }, [search, category]);
 
   const categories = [
-    'Toutes',
+    "Toutes",
     ...new Set(products.map((p) => p.category).filter(Boolean)),
   ];
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
-      search === '' ||
+      search === "" ||
       product.name.toLowerCase().includes(search.toLowerCase()) ||
-      (product.description || '').toLowerCase().includes(search.toLowerCase());
+      (product.description || "").toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
-      category === '' || category === 'Toutes' || product.category === category;
+      category === "" || category === "Toutes" || product.category === category;
     return matchesSearch && matchesCategory;
   });
 
@@ -58,7 +60,9 @@ export default function Catalogue() {
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || !hasMore) return;
-    const observer = new IntersectionObserver(handleSentinel, { threshold: 0.1 });
+    const observer = new IntersectionObserver(handleSentinel, {
+      threshold: 0.1,
+    });
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [hasMore, handleSentinel]);
@@ -91,7 +95,9 @@ export default function Catalogue() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rechercher
+              </label>
               <input
                 type="text"
                 placeholder="Nom ou description..."
@@ -101,14 +107,18 @@ export default function Catalogue() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Catégorie
+              </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {categories.map((cat) => (
-                  <option key={cat} value={cat === 'Toutes' ? '' : cat}>{cat}</option>
+                  <option key={cat} value={cat === "Toutes" ? "" : cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
             </div>
@@ -123,12 +133,14 @@ export default function Catalogue() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {visibleProducts.map((product) => (
-                <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                />
               ))}
             </div>
-            {hasMore && (
-              <div ref={sentinelRef} className="h-10 mt-6" />
-            )}
+            {hasMore && <div ref={sentinelRef} className="h-10 mt-6" />}
           </>
         )}
       </div>

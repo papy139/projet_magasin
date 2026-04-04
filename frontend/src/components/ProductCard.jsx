@@ -25,7 +25,7 @@ export default function ProductCard({ product, onAddToCart }) {
 
         {/* Description */}
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-          {product.description || 'Pas de description disponible'}
+          {product.description || "Pas de description disponible"}
         </p>
 
         {/* Price and Stock Badge */}
@@ -36,11 +36,11 @@ export default function ProductCard({ product, onAddToCart }) {
           <span
             className={`text-xs font-semibold px-2 py-1 rounded ${
               isOutOfStock
-                ? 'bg-red-100 text-red-800'
-                : 'bg-green-100 text-green-800'
+                ? "bg-red-100 text-red-800"
+                : "bg-green-100 text-green-800"
             }`}
           >
-            {isOutOfStock ? 'Rupture' : `En stock : ${product.stock}`}
+            {isOutOfStock ? "Rupture" : `En stock : ${product.stock}`}
           </span>
         </div>
 
@@ -50,8 +50,8 @@ export default function ProductCard({ product, onAddToCart }) {
           disabled={isOutOfStock}
           className={`w-full py-2 rounded font-medium transition ${
             isOutOfStock
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-700'
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
           }`}
         >
           Ajouter au panier

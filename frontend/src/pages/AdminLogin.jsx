@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getOrders } from '../api/orders';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getOrders } from "../api/orders";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 export default function AdminLogin() {
-  usePageTitle('Admin');
-  const [key, setKey] = useState('');
-  const [error, setError] = useState('');
+  usePageTitle("Admin");
+  const [key, setKey] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedKey = sessionStorage.getItem('adminKey');
+    const storedKey = sessionStorage.getItem("adminKey");
     if (storedKey) {
-      navigate('/admin/dashboard');
+      navigate("/admin/dashboard");
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await getOrders(key);
-      sessionStorage.setItem('adminKey', key);
-      navigate('/admin/dashboard');
+      sessionStorage.setItem("adminKey", key);
+      navigate("/admin/dashboard");
     } catch {
-      setError('Clé incorrecte');
+      setError("Clé incorrecte");
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,10 @@ export default function AdminLogin() {
               id="key"
               type="password"
               value={key}
-              onChange={(e) => { setError(''); setKey(e.target.value); }}
+              onChange={(e) => {
+                setError("");
+                setKey(e.target.value);
+              }}
               placeholder="Entrez votre clé admin"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
@@ -71,7 +74,7 @@ export default function AdminLogin() {
             disabled={loading}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition"
           >
-            {loading ? 'Vérification...' : 'Se connecter'}
+            {loading ? "Vérification..." : "Se connecter"}
           </button>
         </form>
       </div>
