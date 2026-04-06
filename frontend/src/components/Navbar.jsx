@@ -8,14 +8,14 @@ export default function Navbar() {
 
   const navLinkClass = ({ isActive }) =>
     `text-sm font-medium transition-colors ${
-      isActive ? "text-primary" : "text-gray-600 hover:text-primary"
+      isActive ? "text-white font-semibold" : "text-green-200 hover:text-white"
     }`;
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-primary-dark shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-6">
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-primary shrink-0">
+        <Link to="/" className="text-xl font-bold text-accent shrink-0">
           Super Boutique
         </Link>
 
@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4 ml-auto">
           <Link
             to="/panier"
-            className="relative flex items-center gap-1.5 text-gray-700 hover:text-primary transition-colors"
+            className="relative flex items-center gap-1.5 text-green-200 hover:text-white transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export default function Navbar() {
             </svg>
             <span className="hidden sm:inline text-sm font-medium">Panier</span>
             {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
                 {itemCount}
               </span>
             )}
@@ -62,7 +62,7 @@ export default function Navbar() {
 
           {/* Hamburger mobile */}
           <button
-            className="md:hidden p-1 text-gray-600 hover:text-primary transition-colors"
+            className="md:hidden p-1 text-green-200 hover:text-white transition-colors"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Menu"
           >
@@ -94,7 +94,7 @@ export default function Navbar() {
 
       {/* Menu mobile */}
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
+        <div className="md:hidden border-t border-primary-light/20 bg-primary-dark px-4 py-4 flex flex-col gap-4">
           <NavLink
             to="/"
             end

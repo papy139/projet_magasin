@@ -9,6 +9,17 @@ import SkeletonCard from "../components/SkeletonCard";
 
 const PAGE_SIZE = 12;
 
+const GRID_ICON = (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+  </svg>
+);
+const LIST_ICON = (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+);
+
 const CATEGORY_CONFIG = {
   Toutes: { emoji: "🛍️", activeBg: "bg-gray-800", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-700", idleBorder: "border-gray-200" },
   Électronique: { emoji: "📱", activeBg: "bg-blue-600", activeText: "text-white", idleBg: "bg-blue-50", idleText: "text-blue-700", idleBorder: "border-blue-200" },
@@ -30,6 +41,7 @@ export default function Catalogue() {
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [sortBy, setSortBy] = useState("newest");
+  const [viewMode, setViewMode] = useState("grid");
   const sentinelRef = useRef(null);
   const { addToCart } = useCart();
 
@@ -50,6 +62,19 @@ export default function Catalogue() {
     "Toutes",
     ...new Set(products.map((p) => p.category).filter(Boolean)),
   ];
+
+  const categoryCounts = useMemo(() => {
+    const counts = { Toutes: products.length };
+    products.forEach((p) => {
+      if (p.category) counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return counts;
+  }, [products]);
+
+  const featuredProducts = useMemo(
+    () => products.filter((p) => p.is_featured),
+    [products],
+  );
 
   const filteredProducts = useMemo(() => {
     const filtered = products.filter((product) => {
@@ -176,6 +201,30 @@ export default function Catalogue() {
         </div>
       </div>
 
+      {/* Coups de coeur */}
+      {featuredProducts.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 pt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-2xl">⭐</span>
+            <h2 className="text-xl font-bold text-gray-900">Coups de coeur</h2>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            {featuredProducts.map((product) => (
+              <div key={product.id} className="w-72 shrink-0">
+                <ProductCard
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  rating={Number(product.rating)}
+                  ratingCount={product.rating_count}
+                  isFeatured={product.is_featured}
+                  viewMode="grid"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Filtres */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-sm p-5 mb-4">
@@ -248,6 +297,9 @@ export default function Catalogue() {
                   >
                     <span>{conf.emoji}</span>
                     {cat}
+                    <span className={`text-xs ${isActive ? "opacity-70" : "opacity-50"}`}>
+                      {categoryCounts[cat] ?? 0}
+                    </span>
                   </button>
                 );
               })}
@@ -255,12 +307,30 @@ export default function Catalogue() {
           </div>
         </div>
 
-        {/* Résultat count */}
+        {/* Résultat count + toggle vue */}
         {!loading && (
-          <p className="text-sm text-gray-400 mb-4">
-            {filteredProducts.length} produit
-            {filteredProducts.length !== 1 ? "s" : ""}
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-gray-400">
+              {filteredProducts.length} produit
+              {filteredProducts.length !== 1 ? "s" : ""}
+            </p>
+            <div className="flex items-center gap-1 bg-white rounded-xl border border-gray-200 p-1">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-1.5 rounded-lg transition-all ${viewMode === "grid" ? "bg-primary text-white shadow-sm" : "text-gray-400 hover:text-gray-700"}`}
+                aria-label="Vue grille"
+              >
+                {GRID_ICON}
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-1.5 rounded-lg transition-all ${viewMode === "list" ? "bg-primary text-white shadow-sm" : "text-gray-400 hover:text-gray-700"}`}
+                aria-label="Vue liste"
+              >
+                {LIST_ICON}
+              </button>
+            </div>
+          </div>
         )}
 
         {/* Grille */}
@@ -294,17 +364,22 @@ export default function Catalogue() {
           <>
             <div
               id="catalogue-grid"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}
             >
-              {visibleProducts.map((product) => (
-                <ProductCard
+              {visibleProducts.map((product, index) => (
+                <div
                   key={product.id}
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  rating={Number(product.rating)}
-                  ratingCount={product.rating_count}
-                  isFeatured={product.is_featured}
-                />
+                  style={{ animation: `fadeInUp 0.35s ease-out ${Math.min(index, 11) * 40}ms both` }}
+                >
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    rating={Number(product.rating)}
+                    ratingCount={product.rating_count}
+                    isFeatured={product.is_featured}
+                    viewMode={viewMode}
+                  />
+                </div>
               ))}
             </div>
             {hasMore && <div ref={sentinelRef} className="h-10 mt-6" />}

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { CartProvider } from "./context/CartContext";
 import Catalogue from "./pages/Catalogue";
 import Panier from "./pages/Panier";
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
+        <Footer />
       </BrowserRouter>
     </CartProvider>
   );
