@@ -11,8 +11,7 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedKey = sessionStorage.getItem("adminKey");
-    if (storedKey) {
+    if (sessionStorage.getItem("adminKey")) {
       navigate("/admin/dashboard");
     }
   }, [navigate]);
@@ -27,56 +26,61 @@ export default function AdminLogin() {
       sessionStorage.setItem("adminKey", key);
       navigate("/admin/dashboard");
     } catch {
-      setError("Clé incorrecte");
+      setError("Clé incorrecte. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Accès Admin
-        </h1>
+    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        {/* Logo / icône */}
+        <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+          <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="key"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Clé Admin
-            </label>
-            <input
-              id="key"
-              type="password"
-              value={key}
-              onChange={(e) => {
-                setError("");
-                setKey(e.target.value);
-              }}
-              placeholder="Entrez votre clé admin"
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              disabled={loading}
-            />
-          </div>
+        <h1 className="text-2xl font-bold text-gray-900 text-center mb-1">Accès admin</h1>
+        <p className="text-sm text-gray-400 text-center mb-7">Entrez votre clé pour accéder au dashboard.</p>
 
-          {error && (
-            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
+        <div className="bg-white rounded-2xl shadow-sm p-7">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="key" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Clé admin
+              </label>
+              <input
+                id="key"
+                type="password"
+                value={key}
+                onChange={(e) => { setError(""); setKey(e.target.value); }}
+                placeholder="••••••••"
+                required
+                disabled={loading}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+              />
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-lg transition"
-          >
-            {loading ? "Vérification..." : "Se connecter"}
-          </button>
-        </form>
+            {error && (
+              <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary-dark disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 rounded-xl transition"
+            >
+              {loading ? "Vérification..." : "Se connecter"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

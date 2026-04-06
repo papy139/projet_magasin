@@ -2,6 +2,21 @@ import { useState } from "react";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { getOrdersByEmail } from "../api/orders";
 
+const STATUS_CONFIG = {
+  pending:   { label: "En attente",  classes: "bg-amber-100 text-amber-700" },
+  confirmed: { label: "Confirmée",   classes: "bg-primary/10 text-primary-dark" },
+  cancelled: { label: "Annulée",     classes: "bg-red-100 text-red-600" },
+};
+
+function StatusBadge({ status }) {
+  const config = STATUS_CONFIG[status] ?? { label: status, classes: "bg-gray-100 text-gray-600" };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${config.classes}`}>
+      {config.label}
+    </span>
+  );
+}
+
 export default function Historique() {
   usePageTitle("Historique");
   const [email, setEmail] = useState("");
@@ -26,119 +41,73 @@ export default function Historique() {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("fr-FR", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "pending":
-        return (
-          <span className="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm font-medium">
-            En attente
-          </span>
-        );
-      case "confirmed":
-        return (
-          <span className="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm font-medium">
-            Confirmée
-          </span>
-        );
-      case "cancelled":
-        return (
-          <span className="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm font-medium">
-            Annulée
-          </span>
-        );
-      default:
-        return (
-          <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm font-medium">
-            {status}
-          </span>
-        );
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Historique des commandes
-        </h1>
+    <div className="min-h-screen bg-cream py-10 px-4">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Mes commandes</h1>
+        <p className="text-gray-400 text-sm mb-8">Entrez votre email pour retrouver vos commandes.</p>
 
-        <form onSubmit={handleSearch} className="flex gap-3 mb-8">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Entrez votre email..."
-            required
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {loading ? "Recherche..." : "Rechercher"}
-          </button>
+        {/* Formulaire recherche */}
+        <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-sm p-5 mb-8">
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+            Email
+          </label>
+          <div className="flex gap-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="jean@example.com"
+              required
+              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-6 py-2.5 bg-primary hover:bg-primary-dark disabled:opacity-50 text-white font-semibold rounded-xl transition text-sm"
+            >
+              {loading ? "Recherche..." : "Rechercher"}
+            </button>
+          </div>
+          {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
         </form>
 
-        {error && (
-          <p className="text-red-600 mb-4">{error}</p>
-        )}
-
-        {searched && orders.length === 0 && !loading && (
-          <p className="text-gray-600 text-lg">
-            Aucune commande trouvée pour cet email.
-          </p>
+        {/* Résultats */}
+        {searched && !loading && orders.length === 0 && (
+          <div className="bg-white rounded-2xl shadow-sm p-10 text-center">
+            <svg className="w-10 h-10 text-gray-200 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p className="text-gray-400 font-medium">Aucune commande trouvée pour cet email.</p>
+          </div>
         )}
 
         {orders.length > 0 && (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-100 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Client
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Statut
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {orders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      #{order.id}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {formatDate(order.created_at)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      {order.customer_name}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      {getStatusBadge(order.status)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-400">{orders.length} commande{orders.length !== 1 ? "s" : ""} trouvée{orders.length !== 1 ? "s" : ""}</p>
+            {orders.map((order) => (
+              <div key={order.id} className="bg-white rounded-2xl shadow-sm p-5 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-cream flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-gray-500">#{order.id}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-900 truncate">{order.customer_name}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{formatDate(order.created_at)}</p>
+                  </div>
+                </div>
+                <StatusBadge status={order.status} />
+              </div>
+            ))}
           </div>
         )}
       </div>

@@ -28,7 +28,6 @@ export default function Catalogue() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Reset visibleCount quand les filtres changent
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [search, category, sortBy]);
@@ -61,7 +60,6 @@ export default function Catalogue() {
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
 
-  // IntersectionObserver pour le scroll infini
   const handleSentinel = useCallback((entries) => {
     if (entries[0].isIntersecting) {
       setVisibleCount((n) => n + PAGE_SIZE);
@@ -71,9 +69,7 @@ export default function Catalogue() {
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || !hasMore) return;
-    const observer = new IntersectionObserver(handleSentinel, {
-      threshold: 0.1,
-    });
+    const observer = new IntersectionObserver(handleSentinel, { threshold: 0.1 });
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [hasMore, handleSentinel]);
@@ -85,10 +81,9 @@ export default function Catalogue() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-cream py-10">
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8">Catalogue</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 12 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
@@ -99,33 +94,69 @@ export default function Catalogue() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">Catalogue</h1>
+    <div className="min-h-screen bg-cream">
+      {/* Hero Banner */}
+      <div className="bg-primary-dark text-white">
+        <div className="max-w-7xl mx-auto px-4 py-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-xl">
+            <span className="inline-block bg-accent/20 text-accent text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
+              Offre du moment
+            </span>
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
+              Frais & de qualité,{" "}
+              <span className="text-accent">livrés chez vous</span>
+            </h1>
+            <p className="text-green-100 text-base md:text-lg mb-6">
+              Découvrez notre sélection de produits soigneusement choisis.
+            </p>
+            <button
+              onClick={() => document.getElementById("catalogue-grid")?.scrollIntoView({ behavior: "smooth" })}
+              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-3 rounded-xl transition-colors duration-150"
+            >
+              Explorer le catalogue
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+          <div className="hidden md:flex items-center justify-center w-64 h-64 rounded-2xl bg-primary/40 shrink-0">
+            <svg className="w-32 h-32 text-primary-light/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Filtres */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-2xl shadow-sm p-5 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
                 Rechercher
               </label>
-              <input
-                type="text"
-                placeholder="Nom ou description..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="relative">
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Nom ou description..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
                 Catégorie
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition appearance-none bg-white"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat === "Toutes" ? "" : cat}>
@@ -136,13 +167,13 @@ export default function Catalogue() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
                 Trier par
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition appearance-none bg-white"
               >
                 <option value="newest">Nouveautés</option>
                 <option value="price_asc">Prix croissant</option>
@@ -154,13 +185,30 @@ export default function Catalogue() {
           </div>
         </div>
 
+        {/* Résultat count */}
+        {!loading && (
+          <p className="text-sm text-gray-400 mb-4">
+            {filteredProducts.length} produit{filteredProducts.length !== 1 ? "s" : ""}
+          </p>
+        )}
+
+        {/* Grille */}
         {filteredProducts.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <p className="text-gray-600 text-lg">Aucun produit trouvé</p>
+          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+            <svg className="w-12 h-12 text-gray-200 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p className="text-gray-500 font-medium">Aucun produit trouvé</p>
+            <button
+              onClick={() => { setSearch(""); setCategory(""); }}
+              className="mt-3 text-sm text-primary hover:underline"
+            >
+              Réinitialiser les filtres
+            </button>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="catalogue-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {visibleProducts.map((product) => (
                 <ProductCard
                   key={product.id}

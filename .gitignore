@@ -7,3 +7,5 @@ frontend/dist/
 backend/node_modules/
 CLAUDE.md
 .claude/
+.claude-flow/
+.swarm/
