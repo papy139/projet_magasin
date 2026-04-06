@@ -17,7 +17,7 @@ export default function ProductCard({
         {/* Image */}
         <Link
           to={`/produit/${product.id}`}
-          className="block relative w-36 shrink-0 bg-gray-100 overflow-hidden group"
+          className="block relative w-36 h-full min-h-[8rem] shrink-0 bg-gray-100 overflow-hidden group"
         >
           {product.image_url ? (
             <img
@@ -49,8 +49,9 @@ export default function ProductCard({
             </Link>
             {rating > 0 && (
               <div className="flex items-center gap-1 mt-0.5 mb-1">
+                <span className="sr-only">Note : {rating.toFixed(1)} sur 5</span>
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className={i < filledStars ? "text-accent text-sm" : "text-gray-200 text-sm"}>★</span>
+                  <span key={i} aria-hidden="true" className={i < filledStars ? "text-accent text-sm" : "text-gray-200 text-sm"}>★</span>
                 ))}
                 <span className="text-xs text-gray-400 ml-1">{rating.toFixed(1)}</span>
               </div>
@@ -145,8 +146,9 @@ export default function ProductCard({
         {rating > 0 && (
           <div className="flex items-center gap-1.5 mb-2">
             <div className="flex items-center gap-0.5">
+              <span className="sr-only">Note : {rating.toFixed(1)} sur 5</span>
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className={i < filledStars ? "text-accent" : "text-gray-200"}>
+                <span key={i} aria-hidden="true" className={i < filledStars ? "text-accent" : "text-gray-200"}>
                   ★
                 </span>
               ))}

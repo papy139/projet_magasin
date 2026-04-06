@@ -20,7 +20,11 @@ const LIST_ICON = (
   </svg>
 );
 
+// Délai max pour l'animation en cascade (index 11 = 440ms)
+const MAX_STAGGER_INDEX = 11;
+
 const CATEGORY_CONFIG = {
+  // IMPORTANT : cette map doit rester en sync avec les catégories de database/init.sql
   Toutes: { emoji: "🛍️", activeBg: "bg-gray-800", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-700", idleBorder: "border-gray-200" },
   Électronique: { emoji: "📱", activeBg: "bg-blue-600", activeText: "text-white", idleBg: "bg-blue-50", idleText: "text-blue-700", idleBorder: "border-blue-200" },
   Vêtements: { emoji: "👕", activeBg: "bg-purple-600", activeText: "text-white", idleBg: "bg-purple-50", idleText: "text-purple-700", idleBorder: "border-purple-200" },
@@ -58,10 +62,10 @@ export default function Catalogue() {
     setVisibleCount(PAGE_SIZE);
   }, [search, category, sortBy]);
 
-  const categories = [
-    "Toutes",
-    ...new Set(products.map((p) => p.category).filter(Boolean)),
-  ];
+  const categories = useMemo(
+    () => ["Toutes", ...new Set(products.map((p) => p.category).filter(Boolean))],
+    [products],
+  );
 
   const categoryCounts = useMemo(() => {
     const counts = { Toutes: products.length };
@@ -333,58 +337,61 @@ export default function Catalogue() {
           </div>
         )}
 
-        {/* Grille */}
-        {filteredProducts.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-            <svg
-              className="w-12 h-12 text-gray-200 mx-auto mb-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p className="text-gray-500 font-medium">Aucun produit trouvé</p>
-            <button
-              onClick={() => {
-                setSearch("");
-                setCategory("");
-              }}
-              className="mt-3 text-sm text-primary hover:underline"
-            >
-              Réinitialiser les filtres
-            </button>
-          </div>
-        ) : (
-          <>
-            <div
-              id="catalogue-grid"
-              className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}
-            >
-              {visibleProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  style={{ animation: `fadeInUp 0.35s ease-out ${Math.min(index, 11) * 40}ms both` }}
-                >
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    rating={Number(product.rating)}
-                    ratingCount={product.rating_count}
-                    isFeatured={product.is_featured}
-                    viewMode={viewMode}
-                  />
-                </div>
-              ))}
+        {/* Grille — id stable en dehors du conditionnel pour que scrollIntoView fonctionne même filtre vide */}
+        <div id="catalogue-grid">
+          {filteredProducts.length === 0 ? (
+            <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+              <svg
+                className="w-12 h-12 text-gray-200 mx-auto mb-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p className="text-gray-500 font-medium">Aucun produit trouvé</p>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setCategory("");
+                }}
+                className="mt-3 text-sm text-primary hover:underline"
+              >
+                Réinitialiser les filtres
+              </button>
             </div>
-            {hasMore && <div ref={sentinelRef} className="h-10 mt-6" />}
-          </>
-        )}
+          ) : (
+            <>
+              {/* key change sur filtres/tri → remount de la grille → animation joue proprement */}
+              <div
+                key={`${search}-${category}-${sortBy}`}
+                className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}
+              >
+                {visibleProducts.map((product, index) => (
+                  <div
+                    key={product.id}
+                    style={{ animation: `fadeInUp 0.35s ease-out ${Math.min(index, MAX_STAGGER_INDEX) * 40}ms both` }}
+                  >
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      rating={Number(product.rating)}
+                      ratingCount={product.rating_count}
+                      isFeatured={product.is_featured}
+                      viewMode={viewMode}
+                    />
+                  </div>
+                ))}
+              </div>
+              {hasMore && <div ref={sentinelRef} className="h-10 mt-6" />}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

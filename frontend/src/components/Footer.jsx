@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default function Footer() {
   return (
     <footer className="bg-primary-dark text-white mt-16">
@@ -18,13 +20,10 @@ export default function Footer() {
             <Link to="/historique" className="hover:text-white transition-colors">
               Mes commandes
             </Link>
-            <Link to="/admin" className="hover:text-white transition-colors">
-              Admin
-            </Link>
           </div>
         </div>
         <div className="border-t border-primary-light/20 mt-8 pt-6 text-center text-xs text-green-300/50">
-          © {new Date().getFullYear()} Super Boutique — Tous droits réservés
+          © {CURRENT_YEAR} Super Boutique — Tous droits réservés
         </div>
       </div>
     </footer>
