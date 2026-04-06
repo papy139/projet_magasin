@@ -47,7 +47,24 @@ export default function Catalogue() {
   const [sortBy, setSortBy] = useState("newest");
   const [viewMode, setViewMode] = useState("grid");
   const sentinelRef = useRef(null);
+  const carouselRef = useRef(null);
+  const carouselDrag = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const { addToCart } = useCart();
+
+  const onCarouselMouseDown = (e) => {
+    carouselDrag.current = { active: true, startX: e.pageX - carouselRef.current.offsetLeft, scrollLeft: carouselRef.current.scrollLeft };
+    carouselRef.current.style.cursor = "grabbing";
+  };
+  const onCarouselMouseMove = (e) => {
+    if (!carouselDrag.current.active) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    carouselRef.current.scrollLeft = carouselDrag.current.scrollLeft - (x - carouselDrag.current.startX) * 1.2;
+  };
+  const onCarouselMouseUp = () => {
+    carouselDrag.current.active = false;
+    if (carouselRef.current) carouselRef.current.style.cursor = "grab";
+  };
 
   useEffect(() => {
     getProducts()
@@ -212,7 +229,14 @@ export default function Catalogue() {
             <span className="text-2xl">⭐</span>
             <h2 className="text-xl font-bold text-gray-900">Coups de coeur</h2>
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <div
+            ref={carouselRef}
+            className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide cursor-grab select-none"
+            onMouseDown={onCarouselMouseDown}
+            onMouseMove={onCarouselMouseMove}
+            onMouseUp={onCarouselMouseUp}
+            onMouseLeave={onCarouselMouseUp}
+          >
             {featuredProducts.map((product) => (
               <div key={product.id} className="w-72 shrink-0">
                 <ProductCard
