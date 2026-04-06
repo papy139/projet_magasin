@@ -49,10 +49,12 @@ export default function Catalogue() {
   const sentinelRef = useRef(null);
   const carouselRef = useRef(null);
   const carouselDrag = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const [carouselDragging, setCarouselDragging] = useState(false);
   const { addToCart } = useCart();
 
   const onCarouselMouseDown = (e) => {
     carouselDrag.current = { active: true, startX: e.pageX - carouselRef.current.offsetLeft, scrollLeft: carouselRef.current.scrollLeft };
+    setCarouselDragging(true);
     carouselRef.current.style.cursor = "grabbing";
   };
   const onCarouselMouseMove = (e) => {
@@ -63,7 +65,11 @@ export default function Catalogue() {
   };
   const onCarouselMouseUp = () => {
     carouselDrag.current.active = false;
+    setCarouselDragging(false);
     if (carouselRef.current) carouselRef.current.style.cursor = "grab";
+  };
+  const scrollCarousel = (dir) => {
+    carouselRef.current?.scrollBy({ left: dir * 296, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -231,7 +237,7 @@ export default function Catalogue() {
           </div>
           <div
             ref={carouselRef}
-            className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide cursor-grab select-none"
+            className={`flex gap-4 overflow-x-auto pb-4 scrollbar-hide cursor-grab select-none ${carouselDragging ? "carousel-dragging" : ""}`}
             onMouseDown={onCarouselMouseDown}
             onMouseMove={onCarouselMouseMove}
             onMouseUp={onCarouselMouseUp}
@@ -249,6 +255,23 @@ export default function Catalogue() {
                 />
               </div>
             ))}
+          </div>
+          {/* Boutons navigation */}
+          <div className="flex justify-center gap-3 mt-3">
+            <button
+              onClick={() => scrollCarousel(-1)}
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm text-gray-600 hover:bg-primary hover:text-white hover:border-primary transition-all"
+              aria-label="Précédent"
+            >
+              ‹
+            </button>
+            <button
+              onClick={() => scrollCarousel(1)}
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm text-gray-600 hover:bg-primary hover:text-white hover:border-primary transition-all"
+              aria-label="Suivant"
+            >
+              ›
+            </button>
           </div>
         </div>
       )}

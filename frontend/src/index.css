@@ -13,6 +13,11 @@
   }
 }
 
+.carousel-dragging * {
+  pointer-events: none;
+  user-select: none;
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
