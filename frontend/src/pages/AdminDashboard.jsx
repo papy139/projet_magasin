@@ -78,6 +78,9 @@ export default function AdminDashboard() {
     try {
       if (modalProduct) {
         await updateProduct(modalProduct.id, data, adminKey);
+        if (data.stock !== undefined && data.stock !== modalProduct.stock) {
+          await updateStock(modalProduct.id, data.stock, adminKey);
+        }
       } else {
         await createProduct(data, adminKey);
       }
