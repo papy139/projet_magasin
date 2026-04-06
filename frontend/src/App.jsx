@@ -8,6 +8,7 @@ import Commande from "./pages/Commande";
 import Historique from "./pages/Historique";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import Produit from "./pages/Produit";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/historique" element={<Historique />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/produit/:id" element={<Produit />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

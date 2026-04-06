@@ -1,11 +1,13 @@
+import { Link } from "react-router-dom";
+
 export default function ProductCard({ product, onAddToCart, rating = 0, ratingCount = 0, isFeatured = false }) {
   const isOutOfStock = product.stock === 0;
   const filledStars = Math.round(rating);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 overflow-hidden flex flex-col">
-      {/* Image */}
-      <div className="relative h-52 bg-gray-100 overflow-hidden">
+      {/* Image cliquable */}
+      <Link to={`/produit/${product.id}`} className="block relative h-52 bg-gray-100 overflow-hidden">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -37,14 +39,16 @@ export default function ProductCard({ product, onAddToCart, rating = 0, ratingCo
         >
           {isOutOfStock ? "Rupture" : `Stock : ${product.stock}`}
         </span>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-5 flex flex-col flex-1">
-        {/* Name */}
-        <h3 className="text-base font-semibold text-gray-900 mb-1 leading-snug">
-          {product.name}
-        </h3>
+        {/* Nom cliquable */}
+        <Link to={`/produit/${product.id}`} className="hover:text-primary transition-colors">
+          <h3 className="text-base font-semibold text-gray-900 mb-1 leading-snug">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Rating */}
         {rating > 0 && (
@@ -67,7 +71,7 @@ export default function ProductCard({ product, onAddToCart, rating = 0, ratingCo
           {product.description || "Pas de description disponible"}
         </p>
 
-        {/* Price + Button */}
+        {/* Prix */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-2xl font-bold text-gray-900">
             {Number(product.price).toFixed(2)}
