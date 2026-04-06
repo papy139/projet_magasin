@@ -104,3 +104,7 @@ INSERT INTO products (name, description, price, stock, category, image_url, is_f
   ('Palette maquillage 12 couleurs', 'Fards à paupières mat et shimmer, longue tenue, vegan', 24.99, 15, 'Beauté', 'https://placehold.co/300x300?text=Palette', false, 4.4, 312),
   ('Huile démaquillante douce', 'Huile bi-phase 150ml, waterproof, convient peaux sensibles', 15.99, 22, 'Beauté', 'https://placehold.co/300x300?text=Huile', false, 4.5, 267),
   ('Masque visage à l''argile', 'Masque purifiant 100ml, argile blanche et kaolin, 2 utilisations/semaine', 12.99, 28, 'Beauté', 'https://placehold.co/300x300?text=Masque', false, 4.2, 198);
+
+-- Remplacement de toutes les images placeholder par de vraies photos (picsum.photos)
+-- Le seed = id produit → photo unique et stable pour chaque produit
+UPDATE products SET image_url = 'https://picsum.photos/seed/' || id || '/400/400';
