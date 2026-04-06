@@ -27,12 +27,20 @@ const CATEGORY_CONFIG = {
   // IMPORTANT : cette map doit rester en sync avec les catégories de database/init.sql
   Toutes: { emoji: "🛍️", activeBg: "bg-gray-800", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-700", idleBorder: "border-gray-200" },
   Électronique: { emoji: "📱", activeBg: "bg-blue-600", activeText: "text-white", idleBg: "bg-blue-50", idleText: "text-blue-700", idleBorder: "border-blue-200" },
+  Informatique: { emoji: "💻", activeBg: "bg-slate-700", activeText: "text-white", idleBg: "bg-slate-100", idleText: "text-slate-700", idleBorder: "border-slate-200" },
   Vêtements: { emoji: "👕", activeBg: "bg-purple-600", activeText: "text-white", idleBg: "bg-purple-50", idleText: "text-purple-700", idleBorder: "border-purple-200" },
   Maison: { emoji: "🏠", activeBg: "bg-amber-500", activeText: "text-white", idleBg: "bg-amber-50", idleText: "text-amber-700", idleBorder: "border-amber-200" },
+  Cuisine: { emoji: "🍳", activeBg: "bg-orange-500", activeText: "text-white", idleBg: "bg-orange-50", idleText: "text-orange-700", idleBorder: "border-orange-200" },
   Sport: { emoji: "🏃", activeBg: "bg-green-600", activeText: "text-white", idleBg: "bg-green-50", idleText: "text-green-700", idleBorder: "border-green-200" },
   Livres: { emoji: "📚", activeBg: "bg-yellow-500", activeText: "text-white", idleBg: "bg-yellow-50", idleText: "text-yellow-700", idleBorder: "border-yellow-200" },
   Jardin: { emoji: "🌱", activeBg: "bg-lime-600", activeText: "text-white", idleBg: "bg-lime-50", idleText: "text-lime-700", idleBorder: "border-lime-200" },
   Beauté: { emoji: "✨", activeBg: "bg-pink-500", activeText: "text-white", idleBg: "bg-pink-50", idleText: "text-pink-700", idleBorder: "border-pink-200" },
+  Jouets: { emoji: "🧸", activeBg: "bg-red-500", activeText: "text-white", idleBg: "bg-red-50", idleText: "text-red-700", idleBorder: "border-red-200" },
+  Animalerie: { emoji: "🐾", activeBg: "bg-teal-600", activeText: "text-white", idleBg: "bg-teal-50", idleText: "text-teal-700", idleBorder: "border-teal-200" },
+  Musique: { emoji: "🎵", activeBg: "bg-indigo-600", activeText: "text-white", idleBg: "bg-indigo-50", idleText: "text-indigo-700", idleBorder: "border-indigo-200" },
+  Voyage: { emoji: "✈️", activeBg: "bg-sky-600", activeText: "text-white", idleBg: "bg-sky-50", idleText: "text-sky-700", idleBorder: "border-sky-200" },
+  Auto: { emoji: "🚗", activeBg: "bg-rose-600", activeText: "text-white", idleBg: "bg-rose-50", idleText: "text-rose-700", idleBorder: "border-rose-200" },
+  Bureau: { emoji: "📝", activeBg: "bg-zinc-600", activeText: "text-white", idleBg: "bg-zinc-100", idleText: "text-zinc-700", idleBorder: "border-zinc-200" },
 };
 const DEFAULT_CAT = { emoji: "📦", activeBg: "bg-gray-600", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-600", idleBorder: "border-gray-200" };
 
