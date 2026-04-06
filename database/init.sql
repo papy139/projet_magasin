@@ -70,3 +70,37 @@ INSERT INTO products (name, description, price, stock, category, image_url, is_f
   ('Sérum vitamine C', 'Sérum visage 30ml, 15% vitamine C, anti-taches, vegan', 32.99, 17, 'Beauté', 'https://placehold.co/300x300?text=Serum', true, 4.7, 445),
   ('Brosse à dents électrique', 'Sonique 40000 vibrations/min, 3 modes, tête de rechange incluse', 49.99, 13, 'Beauté', 'https://placehold.co/300x300?text=Brosse', false, 4.3, 231),
   ('Crème hydratante SPF30', 'Soin quotidien 50ml, protection solaire intégrée, non gras', 19.99, 26, 'Beauté', 'https://placehold.co/300x300?text=Creme', false, 4.1, 178);
+
+INSERT INTO products (name, description, price, stock, category, image_url, is_featured, rating, rating_count) VALUES
+  -- Électronique (suite)
+  ('Souris sans fil ergonomique', 'Souris optique 1600 DPI, 3 boutons, autonomie 12 mois', 39.99, 20, 'Électronique', 'https://placehold.co/300x300?text=Souris', false, 4.3, 167),
+  ('Clavier mécanique RGB', 'Clavier compact TKL, switches blue, rétroéclairage RGB', 89.99, 8, 'Électronique', 'https://placehold.co/300x300?text=Clavier', true, 4.6, 312),
+  ('Webcam Full HD 1080p', 'Webcam USB plug-and-play, micro intégré, angle 90°', 59.99, 11, 'Électronique', 'https://placehold.co/300x300?text=Webcam', false, 4.2, 98),
+  ('Batterie externe 20000 mAh', 'Power bank USB-C, charge rapide 22.5W, 2 ports USB', 44.99, 18, 'Électronique', 'https://placehold.co/300x300?text=Batterie', false, 4.4, 224),
+  ('Hub USB-C 7 en 1', 'Adaptateur multiport HDMI 4K, USB 3.0 x3, SD, Ethernet', 54.99, 14, 'Électronique', 'https://placehold.co/300x300?text=Hub', false, 4.1, 143),
+  -- Vêtements (suite)
+  ('Robe d''été fleurie', 'Robe légère 100% viscose, motif floral, col V', 45.99, 14, 'Vêtements', 'https://placehold.co/300x300?text=Robe', false, 4.0, 89),
+  ('Short de sport respirant', 'Short running tissu mesh, poche zippée, séchage rapide', 29.99, 25, 'Vêtements', 'https://placehold.co/300x300?text=Short', false, 4.2, 134),
+  ('Polo classique coton piqué', 'Polo 100% coton, col boutonné, disponible en 6 couleurs', 34.99, 30, 'Vêtements', 'https://placehold.co/300x300?text=Polo', false, 4.1, 207),
+  ('Manteau en laine oversize', 'Manteau chaud, coupe oversize, fermeture boutons, 80% laine', 149.99, 6, 'Vêtements', 'https://placehold.co/300x300?text=Manteau', true, 4.7, 156),
+  -- Maison (suite)
+  ('Miroir rond 50 cm', 'Miroir mural avec cadre en rotin naturel, crochet inclus', 39.99, 9, 'Maison', 'https://placehold.co/300x300?text=Miroir', false, 4.3, 77),
+  ('Ensemble verres à vin x6', 'Verres cristallin 35cl, pied long, lave-vaisselle compatible', 29.99, 10, 'Maison', 'https://placehold.co/300x300?text=Verres', false, 4.2, 63),
+  ('Plateau de service en bambou', 'Plateau 40x30cm avec poignées, bambou certifié FSC', 22.99, 13, 'Maison', 'https://placehold.co/300x300?text=Plateau', false, 4.0, 51),
+  ('Humidificateur d''air 3L', 'Humidificateur silencieux, brumisation froide, timer 8h', 49.99, 7, 'Maison', 'https://placehold.co/300x300?text=Humidificateur', false, 4.4, 189),
+  -- Sport (suite)
+  ('Haltères 5 kg (la paire)', 'Haltères néoprène antidérapant, poignée confortable', 34.99, 6, 'Sport', 'https://placehold.co/300x300?text=Halteres', false, 4.5, 201),
+  ('Foam roller massage', 'Rouleau mousse haute densité 33cm, relief grille', 19.99, 22, 'Sport', 'https://placehold.co/300x300?text=Foam', false, 4.3, 118),
+  ('Sac de sport 40L', 'Sac imperméable, compartiment chaussures, bandoulière réglable', 49.99, 9, 'Sport', 'https://placehold.co/300x300?text=SacSport', false, 4.1, 87),
+  -- Livres (suite)
+  ('Harry Potter à l''école des sorciers', 'J.K. Rowling — Édition brochée, tome 1', 14.99, 30, 'Livres', 'https://placehold.co/300x300?text=Harry', false, 4.9, 2145),
+  ('L''Alchimiste', 'Paulo Coelho — Roman de développement personnel, poche', 11.99, 25, 'Livres', 'https://placehold.co/300x300?text=Alchimiste', false, 4.6, 987),
+  ('Atomic Habits', 'James Clear — Construire de bonnes habitudes, édition française', 19.99, 18, 'Livres', 'https://placehold.co/300x300?text=Habits', true, 4.8, 1432),
+  -- Jardin (suite)
+  ('Gants de jardinage (M/L)', 'Gants cuir et coton, résistants aux épines, taille réglable', 9.99, 20, 'Jardin', 'https://placehold.co/300x300?text=Gants', false, 4.0, 55),
+  ('Kit graines aromatiques x8', 'Basilic, persil, thym, menthe... prêt à planter, bio', 14.99, 18, 'Jardin', 'https://placehold.co/300x300?text=Graines', false, 4.3, 83),
+  ('Bac à fleurs rectangulaire 60cm', 'Jardinière résine imitation pierre, drainage intégré', 27.99, 12, 'Jardin', 'https://placehold.co/300x300?text=Bac', false, 3.9, 38),
+  -- Beauté (suite)
+  ('Palette maquillage 12 couleurs', 'Fards à paupières mat et shimmer, longue tenue, vegan', 24.99, 15, 'Beauté', 'https://placehold.co/300x300?text=Palette', false, 4.4, 312),
+  ('Huile démaquillante douce', 'Huile bi-phase 150ml, waterproof, convient peaux sensibles', 15.99, 22, 'Beauté', 'https://placehold.co/300x300?text=Huile', false, 4.5, 267),
+  ('Masque visage à l''argile', 'Masque purifiant 100ml, argile blanche et kaolin, 2 utilisations/semaine', 12.99, 28, 'Beauté', 'https://placehold.co/300x300?text=Masque', false, 4.2, 198);

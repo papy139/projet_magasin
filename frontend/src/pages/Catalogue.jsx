@@ -9,6 +9,18 @@ import SkeletonCard from "../components/SkeletonCard";
 
 const PAGE_SIZE = 12;
 
+const CATEGORY_CONFIG = {
+  Toutes: { emoji: "🛍️", activeBg: "bg-gray-800", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-700", idleBorder: "border-gray-200" },
+  Électronique: { emoji: "📱", activeBg: "bg-blue-600", activeText: "text-white", idleBg: "bg-blue-50", idleText: "text-blue-700", idleBorder: "border-blue-200" },
+  Vêtements: { emoji: "👕", activeBg: "bg-purple-600", activeText: "text-white", idleBg: "bg-purple-50", idleText: "text-purple-700", idleBorder: "border-purple-200" },
+  Maison: { emoji: "🏠", activeBg: "bg-amber-500", activeText: "text-white", idleBg: "bg-amber-50", idleText: "text-amber-700", idleBorder: "border-amber-200" },
+  Sport: { emoji: "🏃", activeBg: "bg-green-600", activeText: "text-white", idleBg: "bg-green-50", idleText: "text-green-700", idleBorder: "border-green-200" },
+  Livres: { emoji: "📚", activeBg: "bg-yellow-500", activeText: "text-white", idleBg: "bg-yellow-50", idleText: "text-yellow-700", idleBorder: "border-yellow-200" },
+  Jardin: { emoji: "🌱", activeBg: "bg-lime-600", activeText: "text-white", idleBg: "bg-lime-50", idleText: "text-lime-700", idleBorder: "border-lime-200" },
+  Beauté: { emoji: "✨", activeBg: "bg-pink-500", activeText: "text-white", idleBg: "bg-pink-50", idleText: "text-pink-700", idleBorder: "border-pink-200" },
+};
+const DEFAULT_CAT = { emoji: "📦", activeBg: "bg-gray-600", activeText: "text-white", idleBg: "bg-gray-100", idleText: "text-gray-600", idleBorder: "border-gray-200" };
+
 export default function Catalogue() {
   usePageTitle("Catalogue");
   const [searchParams] = useSearchParams();
@@ -166,8 +178,8 @@ export default function Catalogue() {
 
       {/* Filtres */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-sm p-5 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl shadow-sm p-5 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
                 Rechercher
@@ -198,23 +210,6 @@ export default function Catalogue() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-                Catégorie
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition appearance-none bg-white"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat === "Toutes" ? "" : cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
                 Trier par
               </label>
               <select
@@ -228,6 +223,34 @@ export default function Catalogue() {
                 <option value="stock_desc">Stock disponible</option>
                 <option value="popular">Les plus achetés</option>
               </select>
+            </div>
+          </div>
+
+          {/* Pills catégories */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+              Catégorie
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {categories.map((cat) => {
+                const conf = CATEGORY_CONFIG[cat] || DEFAULT_CAT;
+                const isActive =
+                  (cat === "Toutes" && category === "") || cat === category;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setCategory(cat === "Toutes" ? "" : cat)}
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-sm font-medium transition-all duration-150 ${
+                      isActive
+                        ? `${conf.activeBg} ${conf.activeText} border-transparent shadow-sm scale-105`
+                        : `${conf.idleBg} ${conf.idleText} ${conf.idleBorder} hover:scale-105 hover:shadow-sm`
+                    }`}
+                  >
+                    <span>{conf.emoji}</span>
+                    {cat}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
