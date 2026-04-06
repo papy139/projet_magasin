@@ -11,13 +11,14 @@ dist/
 build/
 frontend/dist/
 
-# Outils Claude / MCP
+# Outils Claude / MCP / IA
 CLAUDE.md
 .claude/
 .claude-flow/
 .swarm/
 .mcp.json
 **/.mcp.json
+docs/superpowers/
 
 # OS
 .DS_Store
