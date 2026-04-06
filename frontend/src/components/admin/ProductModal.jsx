@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 
-const EMPTY = { name: "", description: "", price: "", stock: "0", category: "", image_url: "" };
+const EMPTY = {
+  name: "",
+  description: "",
+  price: "",
+  stock: "0",
+  category: "",
+  image_url: "",
+};
 
 function Field({ label, required, children }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
+        {label}
+        {required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
       {children}
     </div>
@@ -22,7 +30,15 @@ function Input({ ...props }) {
   );
 }
 
-export default function ProductModal({ isOpen, onClose, onSubmit, initialData, categories, loading, error }) {
+export default function ProductModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialData,
+  categories,
+  loading,
+  error,
+}) {
   const isEdit = !!initialData;
   const [form, setForm] = useState(EMPTY);
   const [customCategory, setCustomCategory] = useState(false);
@@ -38,7 +54,11 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
           category: initialData.category || "",
           image_url: initialData.image_url || "",
         });
-        setCustomCategory(initialData.category ? !categories.includes(initialData.category) : false);
+        setCustomCategory(
+          initialData.category
+            ? !categories.includes(initialData.category)
+            : false,
+        );
       } else {
         setForm(EMPTY);
         setCustomCategory(false);
@@ -75,7 +95,10 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
@@ -84,9 +107,23 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
           <h2 className="text-lg font-bold text-gray-900">
             {isEdit ? "Modifier le produit" : "Ajouter un produit"}
           </h2>
-          <button onClick={onClose} aria-label="Fermer" className="text-gray-400 hover:text-gray-600 transition p-1 rounded-lg hover:bg-gray-100">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className="text-gray-400 hover:text-gray-600 transition p-1 rounded-lg hover:bg-gray-100"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -102,16 +139,36 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <Field label="Nom" required>
-                <Input type="text" value={form.name} onChange={set("name")} placeholder="Nom du produit" required />
+                <Input
+                  type="text"
+                  value={form.name}
+                  onChange={set("name")}
+                  placeholder="Nom du produit"
+                  required
+                />
               </Field>
             </div>
 
             <Field label="Prix (€)" required>
-              <Input type="number" step="0.01" min="0" value={form.price} onChange={set("price")} placeholder="0.00" required />
+              <Input
+                type="number"
+                step="0.01"
+                min="0"
+                value={form.price}
+                onChange={set("price")}
+                placeholder="0.00"
+                required
+              />
             </Field>
 
             <Field label="Stock">
-              <Input type="number" min="0" value={form.stock} onChange={set("stock")} placeholder="0" />
+              <Input
+                type="number"
+                min="0"
+                value={form.stock}
+                onChange={set("stock")}
+                placeholder="0"
+              />
             </Field>
 
             <div className="col-span-2">
@@ -127,7 +184,10 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
                     />
                     <button
                       type="button"
-                      onClick={() => { setCustomCategory(false); setForm((f) => ({ ...f, category: "" })); }}
+                      onClick={() => {
+                        setCustomCategory(false);
+                        setForm((f) => ({ ...f, category: "" }));
+                      }}
                       className="shrink-0 px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition"
                     >
                       Annuler
@@ -141,7 +201,9 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
                   >
                     <option value="">Sans catégorie</option>
                     {categories.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
                     <option value="__new__">+ Nouvelle catégorie...</option>
                   </select>
@@ -151,11 +213,21 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
 
             <div className="col-span-2">
               <Field label="URL image">
-                <Input type="text" value={form.image_url} onChange={set("image_url")} placeholder="https://..." />
+                <Input
+                  type="text"
+                  value={form.image_url}
+                  onChange={set("image_url")}
+                  placeholder="https://..."
+                />
               </Field>
               {form.image_url && (
                 <div className="mt-2 w-16 h-16 rounded-xl overflow-hidden border border-gray-100">
-                  <img src={form.image_url} alt="preview" className="w-full h-full object-cover" onError={(e) => e.target.style.display = "none"} />
+                  <img
+                    src={form.image_url}
+                    alt="preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
                 </div>
               )}
             </div>
@@ -182,14 +254,31 @@ export default function ProductModal({ isOpen, onClose, onSubmit, initialData, c
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
                   </svg>
                   {isEdit ? "Enregistrement..." : "Ajout en cours..."}
                 </>
+              ) : isEdit ? (
+                "Enregistrer"
               ) : (
-                isEdit ? "Enregistrer" : "Ajouter le produit"
+                "Ajouter le produit"
               )}
             </button>
             <button

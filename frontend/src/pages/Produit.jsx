@@ -70,9 +70,16 @@ export default function Produit() {
       <div className="min-h-screen bg-cream flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-6xl font-bold text-gray-200 mb-4">404</p>
-          <h1 className="text-xl font-semibold text-gray-700 mb-2">Produit introuvable</h1>
-          <p className="text-gray-400 mb-6">Ce produit n'existe pas ou a été supprimé.</p>
-          <Link to="/" className="bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition">
+          <h1 className="text-xl font-semibold text-gray-700 mb-2">
+            Produit introuvable
+          </h1>
+          <p className="text-gray-400 mb-6">
+            Ce produit n'existe pas ou a été supprimé.
+          </p>
+          <Link
+            to="/"
+            className="bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition"
+          >
             Retour au catalogue
           </Link>
         </div>
@@ -87,17 +94,24 @@ export default function Produit() {
       <div className="max-w-5xl mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
-          <Link to="/" className="hover:text-primary transition">Accueil</Link>
+          <Link to="/" className="hover:text-primary transition">
+            Accueil
+          </Link>
           <span>/</span>
           {product.category && (
             <>
-              <Link to={`/?category=${encodeURIComponent(product.category)}`} className="hover:text-primary transition">
+              <Link
+                to={`/?category=${encodeURIComponent(product.category)}`}
+                className="hover:text-primary transition"
+              >
                 {product.category}
               </Link>
               <span>/</span>
             </>
           )}
-          <span className="text-gray-700 font-medium truncate">{product.name}</span>
+          <span className="text-gray-700 font-medium truncate">
+            {product.name}
+          </span>
         </nav>
 
         {/* Produit principal */}
@@ -112,8 +126,18 @@ export default function Produit() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <svg className="w-24 h-24 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-24 h-24 text-gray-200"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
               )}
               {product.is_featured && (
@@ -140,11 +164,19 @@ export default function Produit() {
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className={i < filledStars ? "text-accent" : "text-gray-200"}>★</span>
+                      <span
+                        key={i}
+                        className={
+                          i < filledStars ? "text-accent" : "text-gray-200"
+                        }
+                      >
+                        ★
+                      </span>
                     ))}
                   </div>
                   <span className="text-sm text-gray-400">
-                    {Number(product.rating).toFixed(1)} ({product.rating_count} avis)
+                    {Number(product.rating).toFixed(1)} ({product.rating_count}{" "}
+                    avis)
                   </span>
                 </div>
               )}
@@ -158,10 +190,16 @@ export default function Produit() {
               </div>
 
               {/* Stock badge */}
-              <span className={`inline-flex w-fit items-center px-3 py-1 rounded-full text-xs font-semibold mb-5 ${
-                isOutOfStock ? "bg-red-100 text-red-600" : "bg-primary/10 text-primary-dark"
-              }`}>
-                {isOutOfStock ? "Rupture de stock" : `En stock : ${product.stock}`}
+              <span
+                className={`inline-flex w-fit items-center px-3 py-1 rounded-full text-xs font-semibold mb-5 ${
+                  isOutOfStock
+                    ? "bg-red-100 text-red-600"
+                    : "bg-primary/10 text-primary-dark"
+                }`}
+              >
+                {isOutOfStock
+                  ? "Rupture de stock"
+                  : `En stock : ${product.stock}`}
               </span>
 
               {/* Description */}
@@ -174,7 +212,9 @@ export default function Produit() {
               {/* Sélecteur quantité */}
               {!isOutOfStock && (
                 <div className="flex items-center gap-4 mb-6">
-                  <span className="text-sm font-medium text-gray-600">Quantité</span>
+                  <span className="text-sm font-medium text-gray-600">
+                    Quantité
+                  </span>
                   <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -188,7 +228,9 @@ export default function Produit() {
                       {quantity}
                     </span>
                     <button
-                      onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                      onClick={() =>
+                        setQuantity((q) => Math.min(product.stock, q + 1))
+                      }
                       disabled={quantity >= product.stock}
                       aria-label="Augmenter la quantité"
                       className="px-4 py-2 text-gray-500 hover:bg-gray-50 disabled:opacity-30 transition text-lg"
@@ -226,7 +268,9 @@ export default function Produit() {
         {/* Produits similaires */}
         {related.length > 0 && (
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-5">Produits similaires</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-5">
+              Produits similaires
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((p) => (
                 <ProductCard

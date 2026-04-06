@@ -44,17 +44,25 @@ export default function Catalogue() {
       const matchesSearch =
         search === "" ||
         product.name.toLowerCase().includes(search.toLowerCase()) ||
-        (product.description || "").toLowerCase().includes(search.toLowerCase());
+        (product.description || "")
+          .toLowerCase()
+          .includes(search.toLowerCase());
       const matchesCategory =
-        category === "" || category === "Toutes" || product.category === category;
+        category === "" ||
+        category === "Toutes" ||
+        product.category === category;
       return matchesSearch && matchesCategory;
     });
 
     const sorted = [...filtered];
-    if (sortBy === "price_asc") sorted.sort((a, b) => Number(a.price) - Number(b.price));
-    else if (sortBy === "price_desc") sorted.sort((a, b) => Number(b.price) - Number(a.price));
-    else if (sortBy === "stock_desc") sorted.sort((a, b) => Number(b.stock) - Number(a.stock));
-    else if (sortBy === "popular") sorted.sort((a, b) => Number(b.total_sold) - Number(a.total_sold));
+    if (sortBy === "price_asc")
+      sorted.sort((a, b) => Number(a.price) - Number(b.price));
+    else if (sortBy === "price_desc")
+      sorted.sort((a, b) => Number(b.price) - Number(a.price));
+    else if (sortBy === "stock_desc")
+      sorted.sort((a, b) => Number(b.stock) - Number(a.stock));
+    else if (sortBy === "popular")
+      sorted.sort((a, b) => Number(b.total_sold) - Number(a.total_sold));
 
     return sorted;
   }, [products, search, category, sortBy]);
@@ -71,7 +79,9 @@ export default function Catalogue() {
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || !hasMore) return;
-    const observer = new IntersectionObserver(handleSentinel, { threshold: 0.1 });
+    const observer = new IntersectionObserver(handleSentinel, {
+      threshold: 0.1,
+    });
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [hasMore, handleSentinel]);
@@ -112,18 +122,43 @@ export default function Catalogue() {
               Découvrez notre sélection de produits soigneusement choisis.
             </p>
             <button
-              onClick={() => document.getElementById("catalogue-grid")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("catalogue-grid")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-3 rounded-xl transition-colors duration-150"
             >
               Explorer le catalogue
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
           </div>
           <div className="hidden md:flex items-center justify-center w-64 h-64 rounded-2xl bg-primary/40 shrink-0">
-            <svg className="w-32 h-32 text-primary-light/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            <svg
+              className="w-32 h-32 text-primary-light/60"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
             </svg>
           </div>
         </div>
@@ -138,8 +173,18 @@ export default function Catalogue() {
                 Rechercher
               </label>
               <div className="relative">
-                <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
                 <input
                   type="text"
@@ -190,19 +235,33 @@ export default function Catalogue() {
         {/* Résultat count */}
         {!loading && (
           <p className="text-sm text-gray-400 mb-4">
-            {filteredProducts.length} produit{filteredProducts.length !== 1 ? "s" : ""}
+            {filteredProducts.length} produit
+            {filteredProducts.length !== 1 ? "s" : ""}
           </p>
         )}
 
         {/* Grille */}
         {filteredProducts.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-            <svg className="w-12 h-12 text-gray-200 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-12 h-12 text-gray-200 mx-auto mb-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <p className="text-gray-500 font-medium">Aucun produit trouvé</p>
             <button
-              onClick={() => { setSearch(""); setCategory(""); }}
+              onClick={() => {
+                setSearch("");
+                setCategory("");
+              }}
               className="mt-3 text-sm text-primary hover:underline"
             >
               Réinitialiser les filtres
@@ -210,7 +269,10 @@ export default function Catalogue() {
           </div>
         ) : (
           <>
-            <div id="catalogue-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              id="catalogue-grid"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
               {visibleProducts.map((product) => (
                 <ProductCard
                   key={product.id}

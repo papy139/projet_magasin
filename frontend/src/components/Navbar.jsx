@@ -75,9 +75,17 @@ export default function Navbar() {
               strokeWidth={2}
             >
               {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
@@ -87,13 +95,26 @@ export default function Navbar() {
       {/* Menu mobile */}
       {menuOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 flex flex-col gap-4">
-          <NavLink to="/" end className={navLinkClass} onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to="/"
+            end
+            className={navLinkClass}
+            onClick={() => setMenuOpen(false)}
+          >
             Catalogue
           </NavLink>
-          <NavLink to="/historique" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to="/historique"
+            className={navLinkClass}
+            onClick={() => setMenuOpen(false)}
+          >
             Mes commandes
           </NavLink>
-          <NavLink to="/admin" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to="/admin"
+            className={navLinkClass}
+            onClick={() => setMenuOpen(false)}
+          >
             Admin
           </NavLink>
         </div>
