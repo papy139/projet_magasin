@@ -115,8 +115,8 @@ export default function Catalogue() {
               Offre du moment
             </span>
             <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
-              Frais & de qualité,{" "}
-              <span className="text-accent">livrés chez vous</span>
+              Votre boutique en ligne,{" "}
+              <span className="text-accent">simple et rapide</span>
             </h1>
             <p className="text-green-100 text-base md:text-lg mb-6">
               Découvrez notre sélection de produits soigneusement choisis.
