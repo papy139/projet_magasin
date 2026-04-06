@@ -1,21 +1,7 @@
 import { useState } from "react";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { getOrdersByEmail } from "../api/orders";
-
-const STATUS_CONFIG = {
-  pending:   { label: "En attente",  classes: "bg-amber-100 text-amber-700" },
-  confirmed: { label: "Confirmée",   classes: "bg-primary/10 text-primary-dark" },
-  cancelled: { label: "Annulée",     classes: "bg-red-100 text-red-600" },
-};
-
-function StatusBadge({ status }) {
-  const config = STATUS_CONFIG[status] ?? { label: status, classes: "bg-gray-100 text-gray-600" };
-  return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${config.classes}`}>
-      {config.label}
-    </span>
-  );
-}
+import StatusBadge from "../components/StatusBadge";
 
 export default function Historique() {
   usePageTitle("Historique");

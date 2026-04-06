@@ -179,6 +179,7 @@ export default function Produit() {
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                       disabled={quantity <= 1}
+                      aria-label="Diminuer la quantité"
                       className="px-4 py-2 text-gray-500 hover:bg-gray-50 disabled:opacity-30 transition text-lg"
                     >
                       −
@@ -189,6 +190,7 @@ export default function Produit() {
                     <button
                       onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
                       disabled={quantity >= product.stock}
+                      aria-label="Augmenter la quantité"
                       className="px-4 py-2 text-gray-500 hover:bg-gray-50 disabled:opacity-30 transition text-lg"
                     >
                       +

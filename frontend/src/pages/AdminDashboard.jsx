@@ -6,17 +6,7 @@ import { useProductFilters } from "../hooks/useProductFilters";
 import { useOrderFilters } from "../hooks/useOrderFilters";
 import { usePageTitle } from "../hooks/usePageTitle";
 import ProductModal from "../components/admin/ProductModal";
-
-const STATUS_CONFIG = {
-  pending:   { label: "En attente", classes: "bg-amber-100 text-amber-700" },
-  confirmed: { label: "Confirmée",  classes: "bg-primary/10 text-primary-dark" },
-  cancelled: { label: "Annulée",    classes: "bg-red-100 text-red-600" },
-};
-
-function StatusBadge({ status }) {
-  const c = STATUS_CONFIG[status] ?? { label: status, classes: "bg-gray-100 text-gray-600" };
-  return <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${c.classes}`}>{c.label}</span>;
-}
+import StatusBadge from "../components/StatusBadge";
 
 function StatCard({ label, value, sub, color = "text-gray-900" }) {
   return (
@@ -160,7 +150,7 @@ export default function AdminDashboard() {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm flex justify-between">
             {error}
-            <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 ml-4">✕</button>
+            <button onClick={() => setError("")} aria-label="Fermer l'erreur" className="text-red-400 hover:text-red-600 ml-4">✕</button>
           </div>
         )}
 
@@ -263,7 +253,7 @@ export default function AdminDashboard() {
                               className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
                             <button onClick={() => handleStockSubmit(product.id)} disabled={stockLoading}
                               className="text-xs bg-primary hover:bg-primary-dark text-white px-2.5 py-1.5 rounded-lg disabled:opacity-50">OK</button>
-                            <button onClick={() => setEditingStockId(null)} className="text-xs text-gray-400 hover:text-gray-600">✕</button>
+                            <button onClick={() => setEditingStockId(null)} aria-label="Annuler la modification du stock" className="text-xs text-gray-400 hover:text-gray-600">✕</button>
                           </div>
                         ) : (
                           <button onClick={() => { setEditingStockId(product.id); setNewStock(String(product.stock)); setDeleteConfirmId(null); }}

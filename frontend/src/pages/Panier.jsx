@@ -70,6 +70,7 @@ export default function Panier() {
                       <button
                         onClick={() => handleQuantityChange(item.product.id, item.quantity - 1, item.product.stock)}
                         disabled={item.quantity <= 1}
+                        aria-label="Diminuer la quantité"
                         className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 disabled:opacity-30 transition"
                       >
                         −
@@ -80,6 +81,7 @@ export default function Panier() {
                       <button
                         onClick={() => handleQuantityChange(item.product.id, item.quantity + 1, item.product.stock)}
                         disabled={item.quantity >= item.product.stock}
+                        aria-label="Augmenter la quantité"
                         className="px-3 py-1.5 text-gray-500 hover:bg-gray-50 disabled:opacity-30 transition"
                       >
                         +

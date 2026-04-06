@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getProducts } from "../api/products";
 import { useCart } from "../context/CartContext";
@@ -10,9 +11,10 @@ const PAGE_SIZE = 12;
 
 export default function Catalogue() {
   usePageTitle("Catalogue");
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(searchParams.get("category") || "");
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [sortBy, setSortBy] = useState("newest");
